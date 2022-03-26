@@ -1,0 +1,2 @@
+Django==4.0.3
+guacapy==0.11.0
