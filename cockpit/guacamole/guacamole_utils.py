@@ -57,6 +57,35 @@ def create_guacamole_connection(connections_details):
         print("Error in creating connection to guacamole \nError:{}".format(e))
         return None
 
+def create_sharing_profile(connection_details):
+    """creates sharing profile with write access
+    example payload
+        {
+            "primaryConnectionIdentifier":"4",
+            "name":"sachin",
+            "parameters":{
+                "read-only":""
+            },
+            "attributes":{}
+        }
+    """
+    try:
+        sharing_profile_payload={
+            "primaryConnectionIdentifier":"{}".format(connection_details["identifier"]),
+            #unique name
+            "name":"{}".format(connection_details["name"]),
+            "parameters":{
+                "read-only":""
+            },
+            "attributes":{}
+        }
+        response=__guacamole_client.add_sharing_profile(sharing_profile_payload)
+        return response
+    except Exception as e :
+        print("Error in creating sharing profile to guacamole \nError:{}".format(e))
+        return None
+
 
     
 #data=    { 'name' : 'something_unique''hostname' : "0.0.0.0",'port' : '22''protocol' : 'ssh','username' : 'ubuntu''password' : 'trynexttime','private-key' : ''}
+#a={"primaryConnectionIdentifier":"6","name":"sachin","parameters":{"read-only":""},"attributes":{}}
