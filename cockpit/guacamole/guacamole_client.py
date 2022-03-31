@@ -617,6 +617,16 @@ class Guacamole:
                 self.REST_API, datasource, sharing_profile_id
             ),
         )
+        
+    def get_sharing_profile_credential(self, active_connection_id, connection_id):
+        if not datasource:
+            datasource = self.primary_datasource
+        return self.__auth_request(
+            method="GET",
+            url="{0}/session/tunnels/{1}/activeConnection/sharingCredentials/{2}".format(
+                self.REST_API, active_connection_id, connection_id
+            )
+        )
 
     def add_sharing_profile(self, payload, datasource=None):
         """
