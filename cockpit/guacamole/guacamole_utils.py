@@ -1,6 +1,7 @@
 from .guacamole_client import Guacamole
 from .guacamole_template import *
 from .guacamole_connections import *
+from cockpit.celery import app 
 import os 
 import websocket
 import time
@@ -9,11 +10,11 @@ import time
 
 try:
     __guacamole_client = Guacamole(
-            os.getenv("GUACAMOLE_HOST","localhost:49154/"),
+            os.getenv("GUACAMOLE_HOST","localhost:49153"),
             os.getenv("GUACAMOLE_USERNAME","guacadmin"),
             os.getenv("GUACAMOLE_PASSWORD","guacadmin"),
             method='http',
-            url_path='guacamole'
+            url_path='/guacamole'
         )
 except Exception as e:
     print("Error in Guacamole client object creattion {}".format(e))
@@ -95,10 +96,9 @@ def create_sharing_profile(connection_details):
 
 def __get_connection_websocket_url(connection_id):
     #'ws://localhost:49154/guacamole/websocket-tunnel?token=F6DB724E26B06A6B5E726616E938285432E0FEBD16A85E0FCB9FED81BB50687A&GUAC_DATA_SOURCE=postgresql&GUAC_ID=1&GUAC_TYPE=c&GUAC_WIDTH=575&GUAC_HEIGHT=667&GUAC_DPI=105&GUAC_TIMEZONE=Asia%2FCalcutta&GUAC_AUDIO=audio%2FL8&GUAC_AUDIO=audio%2FL16&GUAC_IMAGE=image%2Fjpeg&GUAC_IMAGE=image%2Fpng&GUAC_IMAGE=image%2Fwebp')
-    
     try:
-        GUAC_DATA_SOURCE='postgres'
-        GUAC_ID=''.format(connection_id)
+        GUAC_DATA_SOURCE='postgresql'
+        GUAC_ID='{}'.format(connection_id)
         GUAC_TYPE='c'
         GUAC_WIDTH=575
         GUAC_HEIGHT=667
@@ -109,9 +109,10 @@ def __get_connection_websocket_url(connection_id):
         GUAC_IMAGE='image%2Fjpeg'
         GUAC_IMAGE_1='image%2Fpng'
         GUAC_IMAGE_2='image%2Fwebp'
-
+        TOKEN=__guacamole_client.token
+        
         connection_parameters="token={0}&GUAC_DATA_SOURCE={1}&GUAC_ID={2}&GUAC_TYPE={3}&GUAC_WIDTH={4}&GUAC_HEIGHT={5}&GUAC_DPI={6}&GUAC_TIMEZONE={7}&GUAC_AUDIO={8}&GUAC_AUDIO={9}&GUAC_IMAGE={10}&GUAC_IMAGE={11}&GUAC_IMAGE={12}".format(
-            __guacamole_client.token,
+            TOKEN,
             GUAC_DATA_SOURCE,
             GUAC_ID,
             GUAC_TYPE,
@@ -123,53 +124,44 @@ def __get_connection_websocket_url(connection_id):
             GUAC_IMAGE,GUAC_IMAGE_1,GUAC_IMAGE_2
         )
         websocket_connection_url="ws://{0}/guacamole/websocket-tunnel?{1}".format(
-            os.getenv("GUACAMOLE_HOST","localhost:49154/"),
+            os.getenv("GUACAMOLE_HOST","localhost:49153"),
             connection_parameters
             )
-        return websocket_connection_url
+        return { "URL": "{}".format(websocket_connection_url) }
     except Exception as e:
         print("Error in get_connection_websocket_url \nError: {}",format(e))
-        return None
+        return {}
 
-def __get_websocket_connection_obj(connection_details):
-    
+@app.task
+def __create_active_websocket_connection(payload):
     try:
-        connection_id=connection_details['identifier']
         websocket.enableTrace(True)
         w_socket = websocket.WebSocket()
-        URL=__get_connection_websocket_url(connection_id)
-        if URL is not None:
-            w_socket.connect(URL)
-            return w_socket
-        else:
-            return None
-    except Exception as e:
-        print("Error in get_websocket_connection_obj \nError: {}",format(e))
-        return None
-
-def __create_active_websocket_connection(tunnel):
-    try:
-        if tunnel is not None:
+        if len(payload) != 0:
+            w_socket.connect(payload["URL"])
             while(True):
                 time.sleep(1)
                 data="3.key,5.65293,1.0;"
-                tunnel.send(data)
+                w_socket.send(data)
     except Exception as e:
-        print("Error in create_active_websocket_connection \nError: {}".format(e))
+        print("Error in create_active_websocket_connection \n{}".format(e))
 
 def get_active_connection_details(connection_details):
     try:
-        socket_obj=__get_websocket_connection_obj(connection_details)
 
-        if socket_obj is not None:
-            __create_active_websocket_connection(socket_obj)
+        if len(connection_details) != 0:
+            
+            PAYLOAD_URL=__get_connection_websocket_url(connection_details["identifier"])
+            print("PAYLOAD URL: {}".format(PAYLOAD_URL))
+            __create_active_websocket_connection.delay(PAYLOAD_URL)
+            time.sleep(1)
             return __guacamole_client.get_active_connections()
         else:
-            return None
+            return {}
 
     except Exception as e:
         print("Error in get_active_connection_details \nError: {}".format(e))
-        return None
+        return {}
     
 def get_sharing_profile_url(active_connection_id,connection_id):
 
@@ -178,12 +170,12 @@ def get_sharing_profile_url(active_connection_id,connection_id):
         
         sharing_credentials=__guacamole_client.get_sharing_profile_credential(active_connection_id,connection_id)
         keys=sharing_credentials.keys()
-        keys.sort()
+        #keys.sort()
 
         if 'values' in keys:
             credentials_key=sharing_credentials['values']['key']
             URL="http://{0}/guacamole/#/?key={1}".format(
-                os.getenv("GUACAMOLE_HOST","localhost:49154/"),
+                os.getenv("GUACAMOLE_HOST","localhost:49153"),
                 credentials_key
                 )
             return URL
@@ -191,7 +183,7 @@ def get_sharing_profile_url(active_connection_id,connection_id):
             return None
 
     except Exception as e:
-        print("Error in get_sharing_profile \nError: {}".format(e))
+        print("Error in get_sharing_profile_url \nError: {}".format(e))
         return None
 
 
@@ -206,3 +198,4 @@ def get_sharing_profile_url(active_connection_id,connection_id):
     
 #data=    { 'name' : 'something_unique''hostname' : "0.0.0.0",'port' : '22''protocol' : 'ssh','username' : 'ubuntu''password' : 'trynexttime','private-key' : ''}
 #a={"primaryConnectionIdentifier":"6","name":"sachin","parameters":{"read-only":""},"attributes":{}}
+#http://localhost:8080/#/?key=75Y5rUsUxOOk_LyIZE48Cwh5HJhNTVcfEOjXDKjIB3ej

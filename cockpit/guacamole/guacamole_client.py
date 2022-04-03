@@ -619,8 +619,8 @@ class Guacamole:
         )
         
     def get_sharing_profile_credential(self, active_connection_id, connection_id):
-        if not datasource:
-            datasource = self.primary_datasource
+        # if not datasource:
+        #     datasource = self.primary_datasource
         return self.__auth_request(
             method="GET",
             url="{0}/session/tunnels/{1}/activeConnection/sharingCredentials/{2}".format(
