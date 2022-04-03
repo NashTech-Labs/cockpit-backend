@@ -1,3 +1,4 @@
+import os
 """
 Django settings for cockpit project.
 
@@ -133,3 +134,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #DB Routers
 #DATABASE_ROUTERS = ['guacamole.dbrouters.Guacamole']
+
+CELERY_BROKER_URL =  os.getenv("MESSAGE_BROKER_URL","amqp://guest@localhost:5672")                   #'amqp://localhost' #env
+#CELERY_RESULT_BACKEND = "amqp"         #env
+#CELERY_ACCEPT_CONTENT = ['json']
+#CELERY_TASK_SERIALIZER = 'json'
+#CELERY_RESULT_SERIALIZER = 'json'
+CELERY_AMQP_TASK_RESULT_EXPIRES = 1000
+CELERY_IMPORTS=['guacamole.guacamole_utils']
+
