@@ -10,7 +10,7 @@ import time
 
 try:
     __guacamole_client = Guacamole(
-            os.getenv("GUACAMOLE_HOST","localhost:49153"),
+            os.getenv("GUACAMOLE_HOST","localhost:8080"),
             os.getenv("GUACAMOLE_USERNAME","guacadmin"),
             os.getenv("GUACAMOLE_PASSWORD","guacadmin"),
             method='http',
@@ -60,7 +60,7 @@ def create_guacamole_connection(connections_details):
         return response
     except Exception as e :
         print("Error in creating connection to guacamole \nError:{}".format(e))
-        return None
+        return {}
 
 def create_sharing_profile(connection_details):
     """creates sharing profile with write access
@@ -92,10 +92,10 @@ def create_sharing_profile(connection_details):
         return response
     except Exception as e :
         print("Error in creating sharing profile to guacamole \nError:{}".format(e))
-        return None
+        return {}
 
 def __get_connection_websocket_url(connection_id):
-    #'ws://localhost:49154/guacamole/websocket-tunnel?token=F6DB724E26B06A6B5E726616E938285432E0FEBD16A85E0FCB9FED81BB50687A&GUAC_DATA_SOURCE=postgresql&GUAC_ID=1&GUAC_TYPE=c&GUAC_WIDTH=575&GUAC_HEIGHT=667&GUAC_DPI=105&GUAC_TIMEZONE=Asia%2FCalcutta&GUAC_AUDIO=audio%2FL8&GUAC_AUDIO=audio%2FL16&GUAC_IMAGE=image%2Fjpeg&GUAC_IMAGE=image%2Fpng&GUAC_IMAGE=image%2Fwebp')
+    #'ws://localhost:8080/guacamole/websocket-tunnel?token=F6DB724E26B06A6B5E726616E938285432E0FEBD16A85E0FCB9FED81BB50687A&GUAC_DATA_SOURCE=postgresql&GUAC_ID=1&GUAC_TYPE=c&GUAC_WIDTH=575&GUAC_HEIGHT=667&GUAC_DPI=105&GUAC_TIMEZONE=Asia%2FCalcutta&GUAC_AUDIO=audio%2FL8&GUAC_AUDIO=audio%2FL16&GUAC_IMAGE=image%2Fjpeg&GUAC_IMAGE=image%2Fpng&GUAC_IMAGE=image%2Fwebp')
     try:
         GUAC_DATA_SOURCE='postgresql'
         GUAC_ID='{}'.format(connection_id)
@@ -124,7 +124,7 @@ def __get_connection_websocket_url(connection_id):
             GUAC_IMAGE,GUAC_IMAGE_1,GUAC_IMAGE_2
         )
         websocket_connection_url="ws://{0}/guacamole/websocket-tunnel?{1}".format(
-            os.getenv("GUACAMOLE_HOST","localhost:49153"),
+            os.getenv("GUACAMOLE_HOST","localhost:8080"),
             connection_parameters
             )
         return { "URL": "{}".format(websocket_connection_url) }
@@ -155,13 +155,21 @@ def get_active_connection_details(connection_details):
             print("PAYLOAD URL: {}".format(PAYLOAD_URL))
             __create_active_websocket_connection.delay(PAYLOAD_URL)
             time.sleep(1)
-            return __guacamole_client.get_active_connections()
+            
+            active_connection_details=__guacamole_client.get_active_connections()
+
+            for act_con in active_connection_details:
+                print("active_connevction: {}".format(active_connection_details[act_con]))
+                act_con_details=active_connection_details[act_con]
+
+                if act_con_details['connectionIdentifier'] == connection_details["identifier"]:
+                    return act_con_details["identifier"]
         else:
-            return {}
+            return None
 
     except Exception as e:
         print("Error in get_active_connection_details \nError: {}".format(e))
-        return {}
+        return None
     
 def get_sharing_profile_url(active_connection_id,connection_id):
 
@@ -175,9 +183,10 @@ def get_sharing_profile_url(active_connection_id,connection_id):
         if 'values' in keys:
             credentials_key=sharing_credentials['values']['key']
             URL="http://{0}/guacamole/#/?key={1}".format(
-                os.getenv("GUACAMOLE_HOST","localhost:49153"),
+                os.getenv("GUACAMOLE_HOST","localhost:8080"),
                 credentials_key
                 )
+            print("SHARING_URL: {}".format(URL))
             return URL
         else: 
             return None
@@ -185,17 +194,3 @@ def get_sharing_profile_url(active_connection_id,connection_id):
     except Exception as e:
         print("Error in get_sharing_profile_url \nError: {}".format(e))
         return None
-
-
-#intiate_active_tunnel
-#get_active_connection
-#sharing credentials 
-
-#
-#    def get_sharing_profile()__get_connection_websocket_url(connection_id)
-
-
-    
-#data=    { 'name' : 'something_unique''hostname' : "0.0.0.0",'port' : '22''protocol' : 'ssh','username' : 'ubuntu''password' : 'trynexttime','private-key' : ''}
-#a={"primaryConnectionIdentifier":"6","name":"sachin","parameters":{"read-only":""},"attributes":{}}
-#http://localhost:8080/#/?key=75Y5rUsUxOOk_LyIZE48Cwh5HJhNTVcfEOjXDKjIB3ej
