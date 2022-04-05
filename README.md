@@ -14,3 +14,5 @@
     command: celery  -A cockpit worker --loglevel=INFO```
 # 4. run django server
     ```command: python3 manage.py runserver 0.0.0.0:8000```
+# 5 rabbitmq runs
+    ```command : docker run -d -p 5672:5672 rabbitmq```
