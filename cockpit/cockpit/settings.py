@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'guacamole.apps.GuacamoleConfig'
+    'guacamole.apps.GuacamoleConfig',
+    'platforms.apps.PlatformsConfig',
+    'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
@@ -81,12 +83,20 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     },
     'guacamole_db':{
-        'NAME': 'guacamole_db',
-        'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'guacamole_user',
-        'PASSWORD': 'ChooseYourOwnPasswordHere1234',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME':         os.getenv("GUACAMOLE_DB_NAME","guacamole_db"),       #'guacamole_db',
+        'ENGINE':       'django.db.backends.postgresql',
+        'USER':         os.getenv("GUACAMOLE_DB_USER","guacamole_user"),
+        'PASSWORD':     os.getenv("GUACAMOLE_DB_PASSWORD","ChooseYourOwnPasswordHere1234"),
+        'HOST':         os.getenv("GUACAMOLE_DB_HOST",'guacamole_pg'),
+        'PORT':         os.getenv("GUACAMOLE_DB_PORT",'5432'),
+    },
+    'platform_db':{
+        'NAME':         os.getenv("PLATFORM_DB_NAME","platfrom_db"),       #'guacamole_db',
+        'ENGINE':       'django.db.backends.postgresql',
+        'USER':         os.getenv("PLATFORM_DB_USER","platfrom_user"),
+        'PASSWORD':     os.getenv("PLATFROM_DB_PASSWORD","e8bfc3e6d12443830116b721"),
+        'HOST':         os.getenv("PLATFORM_DB_HOST",'platform_pg'),
+        'PORT':         os.getenv("PLATFORM_DB_PORT",'5432'),
     }
 }
 
@@ -142,4 +152,12 @@ CELERY_BROKER_URL =  os.getenv("MESSAGE_BROKER_URL","amqp://guest@localhost:5672
 #CELERY_RESULT_SERIALIZER = 'json'
 CELERY_AMQP_TASK_RESULT_EXPIRES = 1000
 CELERY_IMPORTS=['guacamole.guacamole_utils']
+
+#############EMAIL_SETTINGS #########
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'your_account@gmail.com'
+EMAIL_HOST_PASSWORD = 'your accounts password'
 
