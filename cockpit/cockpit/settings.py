@@ -78,10 +78,10 @@ WSGI_APPLICATION = 'cockpit.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
     'guacamole_db':{
         'NAME':         os.getenv("GUACAMOLE_DB_NAME","guacamole_db"),       #'guacamole_db',
         'ENGINE':       'django.db.backends.postgresql',
@@ -90,7 +90,7 @@ DATABASES = {
         'HOST':         os.getenv("GUACAMOLE_DB_HOST",'guacamole_pg'),
         'PORT':         os.getenv("GUACAMOLE_DB_PORT",'5432'),
     },
-    'platform_db':{
+    'default':{
         'NAME':         os.getenv("PLATFORM_DB_NAME","platfrom_db"),       #'platform_db',
         'ENGINE':       'django.db.backends.postgresql',
         'USER':         os.getenv("PLATFORM_DB_USER","platfrom_user"),
@@ -143,7 +143,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #DB Routers
-DATABASE_ROUTERS = ['platforms.dbrouters.PlatformsRouter','guacamole.dbrouters.GuacamoleRouter']
+#DATABASE_ROUTERS = ['platforms.dbrouters.PlatformsRouter','guacamole.dbrouters.GuacamoleRouter']
 
 CELERY_BROKER_URL =  os.getenv("MESSAGE_BROKER_URL","amqp://guest@localhost:5672")                   #'amqp://localhost' #env
 #CELERY_RESULT_BACKEND = "amqp"         #env

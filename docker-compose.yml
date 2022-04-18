@@ -159,9 +159,9 @@ services:
     - |
       sleep 5
       python manage.py makemigrations platforms
-      python manage.py migrate platforms --database=platform_db
+      python manage.py migrate platforms 
       python manage.py makemigrations user
-      python manage.py migrate user --database=platform_db
+      python manage.py migrate user 
       python manage.py runserver 0.0.0.0:8000
     env_file:
      .envCockpit
