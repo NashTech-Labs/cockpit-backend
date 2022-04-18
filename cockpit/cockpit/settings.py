@@ -1,3 +1,4 @@
+import os
 """
 Django settings for cockpit project.
 
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-p52hpr)1r*8!!392&w6d-$*_5+7nas=o0o$4zqhr1f62a3rk7y'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -37,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'guacamole.apps.GuacamoleConfig'
+    'guacamole.apps.GuacamoleConfig',
+    'platforms.apps.PlatformsConfig',
+    'user.apps.UserConfig'
 ]
 
 MIDDLEWARE = [
@@ -75,17 +78,25 @@ WSGI_APPLICATION = 'cockpit.wsgi.application'
 # https://docs.djangoproject.com/en/4.0/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    },
+    # 'default': {
+    #     'ENGINE': 'django.db.backends.sqlite3',
+    #     'NAME': BASE_DIR / 'db.sqlite3',
+    # },
     'guacamole_db':{
-        'NAME': 'guacamole_db',
-        'ENGINE': 'django.db.backends.postgresql',
-        'USER': 'guacamole_user',
-        'PASSWORD': 'ChooseYourOwnPasswordHere1234',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'NAME':         os.getenv("GUACAMOLE_DB_NAME","guacamole_db"),       #'guacamole_db',
+        'ENGINE':       'django.db.backends.postgresql',
+        'USER':         os.getenv("GUACAMOLE_DB_USER","guacamole_user"),
+        'PASSWORD':     os.getenv("GUACAMOLE_DB_PASSWORD","dd0aa4251547c12c941cde21"),
+        'HOST':         os.getenv("GUACAMOLE_DB_HOST",'guacamole_pg'),
+        'PORT':         os.getenv("GUACAMOLE_DB_PORT",'5432'),
+    },
+    'default':{
+        'NAME':         os.getenv("PLATFORM_DB_NAME","platfrom_db"),       #'platform_db',
+        'ENGINE':       'django.db.backends.postgresql',
+        'USER':         os.getenv("PLATFORM_DB_USER","platfrom_user"),
+        'PASSWORD':     os.getenv("PLATFROM_DB_PASSWORD","e8bfc3e6d12443830116b721"),
+        'HOST':         os.getenv("PLATFORM_DB_HOST",'platform_pg'),
+        'PORT':         os.getenv("PLATFORM_DB_PORT",'5432'),
     }
 }
 
@@ -132,4 +143,21 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #DB Routers
-#DATABASE_ROUTERS = ['guacamole.dbrouters.Guacamole']
+#DATABASE_ROUTERS = ['platforms.dbrouters.PlatformsRouter','guacamole.dbrouters.GuacamoleRouter']
+
+CELERY_BROKER_URL =  os.getenv("MESSAGE_BROKER_URL","amqp://guest@localhost:5672")                   #'amqp://localhost' #env
+#CELERY_RESULT_BACKEND = "amqp"         #env
+#CELERY_ACCEPT_CONTENT = ['json']
+#CELERY_TASK_SERIALIZER = 'json'
+#CELERY_RESULT_SERIALIZER = 'json'
+CELERY_AMQP_TASK_RESULT_EXPIRES = 1000
+CELERY_IMPORTS=['guacamole.guacamole_utils']
+
+# #############EMAIL_SETTINGS #########
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+# EMAIL_HOST = 'smtp.gmail.com'
+# EMAIL_USE_TLS = True
+# EMAIL_PORT = 587
+# EMAIL_HOST_USER = 'your_account@gmail.com'
+# EMAIL_HOST_PASSWORD = 'your accounts password'
+
