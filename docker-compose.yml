@@ -45,7 +45,7 @@ services:
     networks:
       cockpit:
     ports:
-    - 5432/tcp
+    - 8543:5432/tcp
     restart: on-failure
     volumes:
     - 'init_gpg:/docker-entrypoint-initdb.d:ro'
@@ -140,7 +140,7 @@ services:
     networks:
       cockpit:
     ports:
-    - 5432/tcp
+    - 9543:5432/tcp
     restart: on-failure
     volumes:
     - 'init_cpg:/docker-entrypoint-initdb.d:ro'

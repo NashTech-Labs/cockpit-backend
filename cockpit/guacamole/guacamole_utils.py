@@ -183,7 +183,7 @@ def get_sharing_profile_url(active_connection_id,connection_id):
         if 'values' in keys:
             credentials_key=sharing_credentials['values']['key']
             URL="http://{0}/guacamole/#/?key={1}".format(
-                os.getenv("GUACAMOLE_HOST","localhost:8080"),
+                os.getenv("GUACAMOLE_SHARING_HOST","localhost:8080"),
                 credentials_key
                 )
             print("SHARING_URL: {}".format(URL))
