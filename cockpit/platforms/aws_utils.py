@@ -153,3 +153,60 @@ def create_ec2_instance(instance_details):
             'platform_code': 1401
             }
 
+def sendMessage():
+    try:
+         queue = __ec2_client.get_queue_url(QueueName='my-first-q12')
+         response = __ec2_client.send_message(
+         QueueUrl=queue['QueueUrl'],
+         DelaySeconds=10,
+         MessageAttributes={
+        'Title': {
+            'DataType': 'String',
+            'StringValue': 'Cockpit'
+        },
+        'Author': {
+            'DataType': 'String',
+            'StringValue': 'Jubair Ahmad'
+        },
+        'WeeksOn': {
+            'DataType': 'Number',
+            'StringValue': '6'
+        }
+    },
+         MessageBody=(
+        'Information about connection '
+        'date 21/04/22.'
+    )
+)   
+         return response
+    except Exception as e:
+        print("Error in sending message \n{}".format(e))
+        return None
+     
+
+def getMessage():
+    try:
+        queue = __ec2_client.get_queue_url(QueueName='my-first-q12')
+        response = __ec2_client.receive_message(
+        QueueUrl=queue['QueueUrl'],
+        AttributeNames=[
+        'SentTimestamp'
+     ],
+        MaxNumberOfMessages=1,
+        MessageAttributeNames=[
+        'All'
+        ],
+        VisibilityTimeout=0,
+        WaitTimeSeconds=10
+        )
+
+        message = response['Messages'][0]
+        return message
+    except Exception as e:
+        print("Error in recieving message \n{}".format(e))
+        return None
+
+
+if __name__ == "__main__":
+    sendMessage()
+    getMessage()

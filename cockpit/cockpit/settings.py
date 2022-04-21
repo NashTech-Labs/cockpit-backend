@@ -12,6 +12,10 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+
+env = environ.Env()
+environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -91,9 +95,9 @@ DATABASES = {
         'PORT':         os.getenv("GUACAMOLE_DB_PORT",'5432'),
     },
     'default':{
-        'NAME':         os.getenv("PLATFORM_DB_NAME","platfrom_db"),       #'platform_db',
+        'NAME':         os.getenv("PLATFORM_DB_NAME","platform_db"),       #'platform_db',
         'ENGINE':       'django.db.backends.postgresql',
-        'USER':         os.getenv("PLATFORM_DB_USER","platfrom_user"),
+        'USER':         os.getenv("PLATFORM_DB_USER","platform_user"),
         'PASSWORD':     os.getenv("PLATFROM_DB_PASSWORD","e8bfc3e6d12443830116b721"),
         'HOST':         os.getenv("PLATFORM_DB_HOST",'platform_pg'),
         'PORT':         os.getenv("PLATFORM_DB_PORT",'5432'),
@@ -154,10 +158,12 @@ CELERY_AMQP_TASK_RESULT_EXPIRES = 1000
 CELERY_IMPORTS=['guacamole.guacamole_utils']
 
 # #############EMAIL_SETTINGS #########
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'your_account@gmail.com'
-# EMAIL_HOST_PASSWORD = 'your accounts password'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD")
+
+RECIPIENT_ADDRESS = os.getenv("RECIPIENT_ADDRESS")
 
