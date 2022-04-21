@@ -1,7 +1,8 @@
 import boto3
 import os,time
 import json
-from .serializers import create_ec2_entry_in_db
+import base64
+# from .serializers import create_ec2_entry_in_db
 
 
 try:
@@ -27,12 +28,15 @@ def json_format_instance(public_ip=None,
     }
     return instance
 
-def base64_userdata(data):
+def base64_userdata(string):
     try:
-        return data
+        encodedBytes = base64.b64encode(string.encode("utf-8"))
+        encodedStr = str(encodedBytes, "utf-8")
+        return print(encodedStr)
     except Exception as e:
         print("Error in creating base64_userdata \n{}".format(e))
         return None
+base64_userdata("Naincy")
 
 def create_ec2_instance(instance_details):
     """
