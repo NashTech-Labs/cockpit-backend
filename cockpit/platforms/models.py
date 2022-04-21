@@ -3,6 +3,7 @@ from django.db import models
 # Create your models here.
 
 class Instance(models.Model):
+
     INSTANACE_STATE = [
         ('P','PENDING'),
         ('R','RUNNING'),
@@ -10,8 +11,35 @@ class Instance(models.Model):
         ('T','TERMINATED')
     ]
     instance_id = models.CharField(max_length=255,primary_key=True,blank=False)
-    public_ip = models.CharField(max_length=255,blank=True)
-    private_ip = models.CharField(max_length=255,null=False)
-    instance_state = models.CharField(max_length=255,null=False,choices=INSTANACE_STATE,default='PENDING')
-    platforms = models.CharField(max_length=255,blank=True)
-    platforms_state= models.IntegerField(blank=True)
+    public_ip = models.CharField(max_length=255,blank=True,default="None")
+    private_ip = models.CharField(max_length=255,null=False,default="None")
+    instance_state = models.CharField(max_length=255,null=False,default='PENDING')
+    platform = models.CharField(max_length=255,blank=True,default='None')
+    platform_state= models.IntegerField(blank=True)
+    guacamole_ws_url= models.CharField(max_length=255,blank=True,null=True,default='None')
+    guacamole_sharing_url = models.CharField(max_length=255,blank=True,null=True,default='None')
+
+    class Meta:
+        db_table = "instance"    
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.instance_id
+
+class AwsEc2Details(models.Model):
+    image_id=models.CharField(max_length=255,primary_key=True)
+    instance_type=models.CharField(max_length=255,default='t2.micro')
+    subnet_id = models.CharField(max_length=255,null=False, blank=False)
+    security_group_id = models.CharField(max_length=255)
+    iam_profile = models.CharField(max_length=255)
+    key_name = models.CharField(max_length=255)
+    platforms = models.CharField(max_length=255)
+
+    class Meta:
+        db_table = "aws_ec2_details"
+
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.image_id
