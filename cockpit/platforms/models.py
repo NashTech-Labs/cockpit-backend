@@ -10,10 +10,11 @@ class Instance(models.Model):
         ('S','STOPPED'),
         ('T','TERMINATED')
     ]
-    instance_id = models.CharField(max_length=255,primary_key=True,blank=False)
+    platform_id= models.AutoField(primary_key=True)
+    instance_id = models.CharField(max_length=255,blank=False,null=False)
     public_ip = models.CharField(max_length=255,blank=True,default="None")
     private_ip = models.CharField(max_length=255,null=False,default="None")
-    instance_state = models.CharField(max_length=255,null=False,default='PENDING')
+    instance_state = models.CharField(max_length=255,null=False,default='pending')
     platform = models.CharField(max_length=255,blank=True,default='None')
     platform_state= models.IntegerField(blank=True)
     guacamole_ws_url= models.CharField(max_length=255,blank=True,null=True,default='None')
