@@ -2,6 +2,8 @@ import boto3
 import os,time
 import json
 import base64
+import secrets
+import string
 from .serializers import create_ec2_entry_in_db
 
 
@@ -158,3 +160,41 @@ apt update && apt install nginx -y"""
             'platform_code': 1401
             }
 create_ec2_instance(dict)
+
+#the outer function will generate a random string for the record name.
+def get_random_string(length):
+    letters = string.ascii_letters
+    result_str = ''.join(secrets.choice(letters) for i in range(length))
+    record_name= "-" + result_str + '.' + os.getenv("DOMAIN_NAME")
+
+#the inner function will create a record in aws route53 
+    client = boto3.client('route53')
+    def create_record(platform, public_ip):  
+
+        client.change_resource_record_sets(
+        ChangeBatch={
+        'Changes': [
+            {
+                'Action': 'CREATE',
+                'ResourceRecordSet': {
+                    'Name': platform + record_name,
+                    'ResourceRecords': [
+                        {
+                            'Value': public_ip,
+                        },
+                    ],
+                    'TTL': 60,
+                    'Type': 'A',
+                },
+            },
+        ],
+    },
+    HostedZoneId='Z09034342NAWMRUO7F28F',
+)
+
+    create_record('jenkins', '65.0.81.50' )
+    
+get_random_string(4)   
+
+
+
