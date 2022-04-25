@@ -1,7 +1,7 @@
 from django.core import serializers
 import json
 
-from .models import Instance
+from .models import Instance,AwsEc2Details
 
 def update_instance_details(instance_details):
     try:
@@ -18,7 +18,9 @@ def create_ec2_entry_in_db(instance_details):
             private_ip = instance_details['private_ip'],
             instance_state = instance_details['instance_state'],
             platform = instance_details['platform'],
-            platform_state= instance_details['platform_state']
+            platform_state= instance_details['platform_state'],
+            user_name = instance_details['user_name'],
+            user_password = instance_details['user_password']
             )
     except Exception as e:
         print("Error creating instance details in DB \n{}".format(e))
@@ -53,4 +55,31 @@ def get_instance_details(instance_id=None):
         return {}
     except Exception as e:
         print("Exception--> {}".format(e))
+        return {}
+
+
+def get_aws_ec2_details(platform):
+    try:
+        data = json.loads(serializers.serialize('json', AwsEc2Details.objects.filter(
+            platform=platform),
+            fields=(
+                    "image_id",
+                    "instance_type",
+                    "subnet_id",
+                    "security_group_ids",
+                    "iam_profile",
+                    "key_name",
+                    "platform"
+                )
+            )
+        )
+        if len(data) !=0:
+            for aws_ec2_details_obj in data:
+
+                if aws_ec2_details_obj["fields"]["instance_id"] == platform :
+                    temp_dict_obj=aws_ec2_details_obj["fields"]
+                    return  temp_dict_obj
+        return {}
+    except Exception as e:
+        print("Error in getting aws_ec2_details \n".format(e))
         return {}

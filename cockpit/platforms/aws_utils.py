@@ -4,8 +4,11 @@ import os,time
 import json
 from .serializers import create_ec2_entry_in_db
 import logging
+import secrets
 
-
+def __create_random_password():
+    return secrets.token_urlsafe(10)
+ 
 def create_aws_client(client=None):
     try:
         if client is not None:
@@ -35,6 +38,21 @@ def json_format_instance(public_ip=None,
     }
     return instance
 
+def bash_script_create_user(user_name=None,user_password=None):
+    try:
+        if user_name is not None and user_password is not None:
+            user_creation_template="""#!bin/bash
+            echo "Creating user {0}" &>> /var/log/cockpit_user.log
+            sudo useradd -m {0} -s /bin/bash &>> /var/log/cockpit_user.log
+            echo "{0}:{1}" | chpasswd  &>> /var/log/cockpit_user.log
+            """.format(user_name,user_password)
+            return user_creation_template
+        else:
+            return None
+    except Exception as e:
+        print("Error in bash_script_create_user \n{}".format(e))
+        return None
+
 def base64_userdata(data):
     try:
         return data
@@ -57,6 +75,7 @@ def create_ec2_instance(instance_details):
             'user_data':''
         }
     """
+    user_password=__create_random_password()
     try:
         print("Launching the ec2 instance")
 
@@ -70,7 +89,10 @@ def create_ec2_instance(instance_details):
                 InstanceType=instance_details["instance_type"],
                 SubnetId=instance_details["subnet_id"],
                 SecurityGroupIds=instance_details["security_group_ids"],
-                UserData='',
+                UserData='{}'.format(bash_script_create_user(
+                    user_name=instance_details['user_name'],
+                    user_password=user_password)
+                    ),
                 BlockDeviceMappings=[
                     {
                         'DeviceName': '/dev/sdh',
@@ -114,7 +136,9 @@ def create_ec2_instance(instance_details):
                     'public_ip':"None",
                     'instance_state':"pending",
                     'platform':'{}'.format(instance_details['platform']),
-                    'platform_state': 1003
+                    'platform_state': 1003,
+                    'user_name':"{}".format(instance_details['user_name']),
+                    'user_password': "{}".format(user_password)
                 }
             )
 
@@ -154,7 +178,9 @@ def create_ec2_instance(instance_details):
                 'private_ip':'{}'.format(PrivateIpAddress),
                 'instance_state':'{}'.format(InstanceState),
                 'platform':'{}'.format(instance_details['platform']),
-                'platform_state':1004
+                'platform_state':1004,
+                'user_name': '{}'.format(instance_details['user_name']),
+                'user_password':'{}'.format(user_password)
                 }
         else:
             return json_format_instance()    
@@ -170,4 +196,4 @@ def create_ec2_instance(instance_details):
             }
 
 
-#instance_details={'image_id':"ami-04505e74c0741db8d","key_name":"mykeypair",'iam_profile':'arn:aws:iam::240360265167:instance-profile/SSMEc2CoreRole','subnet_id':'subnet-00925fb32ec58642b','instance_type':'t2.micro','security_group_ids':['sg-039ab3daa43b8cc52'],'platform':'JENKINS','user_name':'sachinvd','user_email':'something@gmail.com','user_data':''}
+#instance_details={'image_id':"ami-04505e74c0741db8d","key_name":"mykeypair",'iam_profile':'arn:aws:iam::240360265167:instance-profile/SSMEc2CoreRole','subnet_id':'subnet-00925fb32ec58642b','instance_type':'t2.micro','security_group_ids':['sg-039ab3daa43b8cc52'],'platform':'JENKINS','user_name':'sachinvd','user_email':'something@gmail.com',}
