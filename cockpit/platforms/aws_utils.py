@@ -2,7 +2,7 @@ import boto3
 import os,time
 import json
 import base64
-# from .serializers import create_ec2_entry_in_db
+from .serializers import create_ec2_entry_in_db
 
 
 try:
@@ -36,23 +36,24 @@ def base64_userdata(string):
     except Exception as e:
         print("Error in creating base64_userdata \n{}".format(e))
         return None
-base64_userdata("Naincy")
+
 
 def create_ec2_instance(instance_details):
-    """
-        instance_details = {
+    
+    instance_details = {
             'image_id':"",
             "key_name":"",
             'iam_profile':'',
             'subnet_id':'',
             'instance_type':'',
-            'security_group_id':''
+            'security_group_ids':[''],
             'platform': '',
-            'user_name' '',
-            'user_email':''
-            'user_data':''
+            'user_name': '',
+            'user_email':'',
+            'user_data': """#!/bin/bash 
+apt update && apt install nginx -y"""
         }
-    """
+    
     try:
         print("Launching the ec2 instance")
         
@@ -64,7 +65,7 @@ def create_ec2_instance(instance_details):
             InstanceType=instance_details["instance_type"],
             SubnetId=instance_details["subnet_id"],
             SecurityGroupIds=instance_details["security_group_ids"],
-            UserData='',
+            UserData=instance_details('user_data'),
             BlockDeviceMappings=[
                 {
                     'DeviceName': '/dev/sdh',
@@ -156,4 +157,4 @@ def create_ec2_instance(instance_details):
             'platform':'{}'.format(instance_details['platform']),
             'platform_code': 1401
             }
-
+create_ec2_instance(dict)
