@@ -2,8 +2,10 @@ from pydoc import cli
 import boto3
 import os,time
 import json
-from .serializers import create_ec2_entry_in_db
+# from .serializers import create_ec2_entry_in_db
 import logging
+import string
+import random
 
 
 def create_aws_client(client=None):
@@ -171,3 +173,50 @@ def create_ec2_instance(instance_details):
 
 
 #instance_details={'image_id':"ami-04505e74c0741db8d","key_name":"mykeypair",'iam_profile':'arn:aws:iam::240360265167:instance-profile/SSMEc2CoreRole','subnet_id':'subnet-00925fb32ec58642b','instance_type':'t2.micro','security_group_ids':['sg-039ab3daa43b8cc52'],'platform':'JENKINS','user_name':'sachinvd','user_email':'something@gmail.com','user_data':''}
+
+
+
+
+
+
+def create_hosted_zone_and_records (platform,public_ip):
+  
+    route = boto3.client('route53')
+    response = route.create_hosted_zone(
+    Name='hands-on.route',
+    CallerReference='hz0001',
+    )
+    zones = route.list_hosted_zones_by_name(DNSName='hands-on.cloud')
+    zone_id = zones['HostedZones'][0]['Id']
+    print(zone_id)
+
+    N = 7
+    res = ''.join(random.choices(string.ascii_uppercase +
+                             string.digits, k = N))
+    platform = platform+str(res)
+
+    response = route.change_resource_record_sets(
+        HostedZoneId=zone_id,
+        ChangeBatch={
+            "Comment": "Automatic DNS update",
+            "Changes": [
+                {
+                    "Action": "CREATE",
+                    "ResourceRecordSet": {
+                        "Name": platform+'.'+'hands-on.route',
+                        'SetIdentifier': 'set-01',
+                        "Type": "A",
+                        "Region": "ap-south-1",
+                        "TTL": 60,
+                        "ResourceRecords": [
+                            {
+                                "Value": public_ip,
+                            },
+                        ],
+                    }
+                },
+            ]
+        }
+    )
+
+create_hosted_zone_and_records('jenkins','127.0.0.1')
