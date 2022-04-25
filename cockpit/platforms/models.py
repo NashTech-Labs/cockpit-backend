@@ -1,4 +1,6 @@
 from django.db import models
+from django.db import connections
+
 
 # Create your models here.
 
@@ -44,3 +46,7 @@ class AwsEc2Details(models.Model):
 
     def __str__(self):
         return self.image_id
+
+
+cursor = connections['default'].cursor()  #Allows Python code to execute PostgreSQL command in a database session
+cursor.execute("INSERT INTO aws_ec2_details(image_id,instance_type,subnet_id,security_group_id,iam_profile,key_name,platforms) VALUES ('i-01', 't2.micro','sub-234','sg-01','iam','hello.pem','jenkins')")
