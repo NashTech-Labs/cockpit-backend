@@ -41,8 +41,9 @@ def get_instance_details(instance_id=None):
                     "instance_state" ,
                     "platform" ,
                     "platform_state",
-                    "guacamole_ws_url",
-                    "guacamole_sharing_url" 
+                    "user_name",
+                    "user_password",
+
                 )
             )
         )
@@ -83,3 +84,5 @@ def get_aws_ec2_details(platform):
     except Exception as e:
         print("Error in getting aws_ec2_details \n".format(e))
         return {}
+
+        #instance_details={'instance_id': '12334567', 'public_ip': '127.0.0.1', 'private_ip': '127.0.0.2', 'instance_state': 'pending', 'platform': 'JENKINS', 'platform_state': 1401, 'user_name': 'user1', 'user_password': '1234'}
