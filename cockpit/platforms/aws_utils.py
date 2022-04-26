@@ -184,11 +184,11 @@ def create_hosted_zone_and_records (platform,public_ip):
     route = boto3.client('route53')
     response = route.create_hosted_zone(
     Name='hands-on.route',
-    CallerReference='hz0001',
+    CallerReference='hz00001',
     )
-    zones = route.list_hosted_zones_by_name(DNSName='hands-on.cloud')
+    zones = route.list_hosted_zones_by_name(DNSName='hands-on.route')
     zone_id = zones['HostedZones'][0]['Id']
-    print(zone_id)
+    print("hostedzone id :.{}".format(zone_id))
 
     N = 7
     res = ''.join(random.choices(string.ascii_uppercase +
