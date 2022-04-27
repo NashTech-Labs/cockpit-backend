@@ -5,8 +5,11 @@ from cockpit.celery import app
 import os 
 import websocket
 import time
+import logging
 
 #websocket.enableTrace(True)
+
+logger=logging.getLogger(__name__)
 
 try:
     __guacamole_client = Guacamole(
@@ -17,7 +20,7 @@ try:
             url_path='/guacamole'
         )
 except Exception as e:
-    print("Error in Guacamole client object creattion {}".format(e))
+    logger.error("Error in Guacamole client object creattion {}".format(e))
 
 def _get_formatted_connection_data(connection_json, connection_type='ssh'):
     """returns formatted dictionary object"""
@@ -25,10 +28,10 @@ def _get_formatted_connection_data(connection_json, connection_type='ssh'):
         if connection_type == 'ssh':
             return get_ssh_connection(connection_json)
         else:
-            print("Connection type {} not supported".format(connection_type))
+            logger.info("Connection type {} not supported".format(connection_type))
             return None
     except Exception as e:
-        print("Error in formatting ssh payload \nError {}".format(e))
+        logger.error("Error in formatting ssh payload \nError {}".format(e))
         return None
 
 def get_guacamole_token():
@@ -37,7 +40,7 @@ def get_guacamole_token():
     try:
         return __guacamole_client.token
     except Exception as e:
-        print("Error in getting guacamole api token {}".format(e))
+        logger.error("Error in getting guacamole api token {}".format(e))
         return None
 
 def create_guacamole_connection(connections_details):
@@ -59,7 +62,7 @@ def create_guacamole_connection(connections_details):
         response=__guacamole_client.add_connection(payload)
         return response
     except Exception as e :
-        print("Error in creating connection to guacamole \nError:{}".format(e))
+        logger.error("Error in creating connection to guacamole \nError:{}".format(e))
         return {}
 
 def create_sharing_profile(connection_details):
@@ -91,7 +94,7 @@ def create_sharing_profile(connection_details):
         response=__guacamole_client.add_sharing_profile(sharing_profile_payload)
         return response
     except Exception as e :
-        print("Error in creating sharing profile to guacamole \nError:{}".format(e))
+        logger.error("Error in creating sharing profile to guacamole \nError:{}".format(e))
         return {}
 
 def __get_connection_websocket_url(connection_id):
@@ -129,7 +132,7 @@ def __get_connection_websocket_url(connection_id):
             )
         return { "URL": "{}".format(websocket_connection_url) }
     except Exception as e:
-        print("Error in get_connection_websocket_url \nError: {}",format(e))
+        logger.error("Error in get_connection_websocket_url \nError: {}",format(e))
         return {}
 
 @app.task
@@ -144,7 +147,7 @@ def __create_active_websocket_connection(payload):
                 data="3.key,5.65293,1.0;"
                 w_socket.send(data)
     except Exception as e:
-        print("Error in create_active_websocket_connection \n{}".format(e))
+        logger.error("Error in create_active_websocket_connection \n{}".format(e))
 
 def get_active_connection_details(connection_details):
     try:
@@ -159,7 +162,7 @@ def get_active_connection_details(connection_details):
             active_connection_details=__guacamole_client.get_active_connections()
 
             for act_con in active_connection_details:
-                print("active_connevction: {}".format(active_connection_details[act_con]))
+                logger.info("active_connevction: {}".format(active_connection_details[act_con]))
                 act_con_details=active_connection_details[act_con]
 
                 if act_con_details['connectionIdentifier'] == connection_details["identifier"]:
@@ -168,7 +171,7 @@ def get_active_connection_details(connection_details):
             return None
 
     except Exception as e:
-        print("Error in get_active_connection_details \nError: {}".format(e))
+        logger.error("Error in get_active_connection_details \nError: {}".format(e))
         return None
     
 def get_sharing_profile_url(active_connection_id,connection_id):
@@ -186,11 +189,11 @@ def get_sharing_profile_url(active_connection_id,connection_id):
                 os.getenv("GUACAMOLE_SHARING_HOST","localhost:8080"),
                 credentials_key
                 )
-            print("SHARING_URL: {}".format(URL))
+            logger.info("SHARING_URL: {}".format(URL))
             return URL
         else: 
             return None
 
     except Exception as e:
-        print("Error in get_sharing_profile_url \nError: {}".format(e))
+        logger.error("Error in get_sharing_profile_url \nError: {}".format(e))
         return None
