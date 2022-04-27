@@ -21,6 +21,10 @@ class Instance(models.Model):
     platform_state= models.IntegerField(blank=True)
     guacamole_ws_url= models.CharField(max_length=255,blank=True,null=True,default='None')
     guacamole_sharing_url = models.CharField(max_length=255,blank=True,null=True,default='None')
+    user_name=models.CharField(max_length=255,blank=True,null=True,default="None")
+    user_email=models.CharField(max_length=255,blank=True,null=True,default="None")
+    user_password=models.CharField(max_length=255,blank=True,null=True,default="None")
+
 
     class Meta:
         db_table = "instance"    
@@ -34,10 +38,10 @@ class AwsEc2Details(models.Model):
     image_id=models.CharField(max_length=255,primary_key=True)
     instance_type=models.CharField(max_length=255,default='t2.micro')
     subnet_id = models.CharField(max_length=255,null=False, blank=False)
-    security_group_id = models.CharField(max_length=255)
+    security_group_ids = models.CharField(max_length=255)
     iam_profile = models.CharField(max_length=255)
     key_name = models.CharField(max_length=255)
-    platforms = models.CharField(max_length=255)
+    platform = models.CharField(max_length=255)
 
     class Meta:
         db_table = "aws_ec2_details"
