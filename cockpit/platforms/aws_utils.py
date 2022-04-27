@@ -1,10 +1,14 @@
+from asyncio.log import logger
+from platform import platform
 from pydoc import cli
 import boto3
 import os,time
 import json
-from .serializers import create_ec2_entry_in_db
+#from .serializers import create_ec2_entry_in_db
 import logging
 import secrets
+
+logger=logging.getLogger("platforms")
 
 def __create_random_password():
     return secrets.token_urlsafe(10)
@@ -17,7 +21,7 @@ def create_aws_client(client=None):
         else:
             return None
     except Exception as e:
-        print("Error in creating ec2 client \n{}".format(e))
+        logger.error("Error in creating ec2 client \n{}".format(e))
         return None
 
 def json_format_instance(public_ip=None,
@@ -50,14 +54,14 @@ def bash_script_create_user(user_name=None,user_password=None):
         else:
             return None
     except Exception as e:
-        print("Error in bash_script_create_user \n{}".format(e))
+        logger.error("Error in bash_script_create_user \n{}".format(e))
         return None
 
 def base64_userdata(data):
     try:
         return data
     except Exception as e:
-        print("Error in creating base64_userdata \n{}".format(e))
+        logger.error("Error in creating base64_userdata \n{}".format(e))
         return None
 
 def create_ec2_instance(instance_details):
@@ -77,7 +81,7 @@ def create_ec2_instance(instance_details):
     """
     user_password=__create_random_password()
     try:
-        print("Launching the ec2 instance")
+        logger.info("Launching the ec2 instance")
 
         ec2_client=create_aws_client(client='ec2')
         if ec2_client is not None:
@@ -126,7 +130,7 @@ def create_ec2_instance(instance_details):
                 ],
             )
             
-            print("response:{}".format(instances))
+            logger.info("response:{}".format(instances))
             PrivateIpAddress=instances["Instances"][0]["NetworkInterfaces"][0]['PrivateIpAddress']
             InstanceId = str(instances["Instances"][0]["InstanceId"])
             create_ec2_entry_in_db(
@@ -144,32 +148,32 @@ def create_ec2_instance(instance_details):
 
             describe_instance = ec2_client.describe_instances(InstanceIds=[InstanceId])
 
-            print("Checking for the instance to be in running state...")
+            logger.info("Checking for the instance to be in running state...")
             count = 0
             while True:
                 count = count +1
                 time.sleep(5)
                 describe_instance_status = ec2_client.describe_instance_status(InstanceIds=[InstanceId])
-                print("describe \n{}".format(describe_instance_status))
+                logger.info("describe \n{}".format(describe_instance_status))
                 if describe_instance_status["InstanceStatuses"]:
                     
                     instance_code = describe_instance_status["InstanceStatuses"][0]["InstanceState"]["Code"]
                     InstanceStatus = describe_instance_status["InstanceStatuses"][0]["InstanceStatus"]["Status"]
                     SystemStatus = describe_instance_status["InstanceStatuses"][0]["SystemStatus"]["Status"]
-                    print("instance_state: {}, {},{}".format(instance_code, InstanceStatus,SystemStatus))
+                    logger.info("instance_state: {}, {},{}".format(instance_code, InstanceStatus,SystemStatus))
                     if instance_code == 16 and InstanceStatus == "ok" and SystemStatus == "ok" :
-                        print(InstanceId + " ec2 instance is up and running successfully ")
+                        logger.info(InstanceId + " ec2 instance is up and running successfully ")
                         break
                 if count == 10:
-                    print("Waited for more than 50 seconds, instance " +InstanceId + " doesnt come up,\
+                    logger.info("Waited for more than 50 seconds, instance " +InstanceId + " doesnt come up,\
                                     please check in AWS GUI")
                     break
-            print("Successfull created the ec2 instance..")
-            print("instance Id for your reference : " +InstanceId )
+            logger.info("Successfull created the ec2 instance..")
+            logger.info("instance Id for your reference : " +InstanceId )
             describe_instance = ec2_client.describe_instances(InstanceIds=[InstanceId])
             InstanceState= str(describe_instance["Reservations"][0]["Instances"][0]['State']['Name'])
             PublicIpAddress = str(describe_instance["Reservations"][0]["Instances"][0]["PublicIpAddress"])
-            print("PublicIpAddress for your reference : " +PublicIpAddress )
+            logger.info("PublicIpAddress for your reference : " +PublicIpAddress )
 
 
             return {
@@ -185,7 +189,7 @@ def create_ec2_instance(instance_details):
         else:
             return json_format_instance()    
     except Exception as e:
-        print("Error in creating ec2 \n{}".format(e))
+        logger.info("Error in creating ec2 \n{}".format(e))
         return {
             'instance_id':'None',
             'public_ip':'None',
@@ -194,6 +198,32 @@ def create_ec2_instance(instance_details):
             'platform':'{}'.format(instance_details['platform']),
             'platform_state': 1401
             }
+
+def created_dns_data(platform,public_ip):
+
+    route = boto3.client('route53')
+    response = route.change_resource_record_sets(
+        ChangeBatch={
+            'Changes': [
+                {
+                    'Action': 'CREATE',
+                    'ResourceRecordSet': {
+                        'Name': 'testwebserver.hands-on.cloud',
+                        'ResourceRecords': [
+                            {
+                                'Value': '3.128.188.18',
+                            },
+                        ],
+                        'TTL': 60,
+                        'Type': 'A',
+                    },
+                },
+            ],
+            'Comment': 'Web Server',
+        },
+        HostedZoneId='Z1028294EZPB01YYZ0NL',
+    )
+    print('Jenkins', '11.0.56.90')
 
 
 #instance_details={'image_id':"ami-04505e74c0741db8d","key_name":"mykeypair",'iam_profile':'arn:aws:iam::240360265167:instance-profile/SSMEc2CoreRole','subnet_id':'subnet-00925fb32ec58642b','instance_type':'t2.micro','security_group_ids':['sg-039ab3daa43b8cc52'],'platform':'JENKINS','user_name':'sachinvd','user_email':'something@gmail.com',}
