@@ -5,6 +5,7 @@ import json
 from .serializers import create_ec2_entry_in_db
 import logging
 import secrets
+import string
 
 def __create_random_password():
     return secrets.token_urlsafe(10)
@@ -197,3 +198,41 @@ def create_ec2_instance(instance_details):
 
 
 #instance_details={'image_id':"ami-04505e74c0741db8d","key_name":"mykeypair",'iam_profile':'arn:aws:iam::240360265167:instance-profile/SSMEc2CoreRole','subnet_id':'subnet-00925fb32ec58642b','instance_type':'t2.micro','security_group_ids':['sg-039ab3daa43b8cc52'],'platform':'JENKINS','user_name':'sachinvd','user_email':'something@gmail.com',}
+
+
+
+
+
+
+client =boto3.client('route53',
+    aws_access_key_id=os.environ.get('AWS_ACCESS_KEY'),
+    aws_secret_access_key=os.environ.get('AWS_SECRET_KEY'))
+    
+def create_Record(platform,public_ip):
+    length=8
+    domain="neha.com"
+    result_str = res = ''.join(secrets.choice(string.ascii_uppercase + string.digits)for i in range(length))
+    record_name= platform + "-" + result_str + '.' + domain
+
+    client.change_resource_record_sets(
+    ChangeBatch={
+            'Changes': [
+                {
+                    'Action': 'CREATE',
+                    'ResourceRecordSet': {
+                    'Name':record_name,
+                    'ResourceRecords': [
+                        {
+                            'Value': '127.0.0.1' ,
+                        },
+                    ],
+                    'TTL': 60,
+                    'Type': 'A',
+                },
+            },
+        ],
+    },
+    HostedZoneId='Z01311223BR3XNO34OZ82',
+)
+if __name__ == "__main__":
+    create_Record('jenkins','127.0.0.1')
