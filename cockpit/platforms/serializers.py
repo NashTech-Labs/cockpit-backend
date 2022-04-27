@@ -1,14 +1,17 @@
 from django.core import serializers
 import json
-
 from .models import Instance,AwsEc2Details
+import logging
+
+logger=logging.getLogger("platforms")
+
 
 def update_instance_details(instance_details):
     try:
         if len(instance_details) != 0:
             Instance.objects.filter(instance_id=instance_details["instance_id"]).update(**instance_details)
     except Exception as e:
-        print("Error updating instance details \n{}".format(e))
+        logger.error("Error updating instance details \n{}".format(e))
 
 def create_ec2_entry_in_db(instance_details):
     try:
@@ -23,7 +26,7 @@ def create_ec2_entry_in_db(instance_details):
             user_password = instance_details['user_password']
             )
     except Exception as e:
-        print("Error creating instance details in DB \n{}".format(e))
+        logger.error("Error creating instance details in DB \n{}".format(e))
 
 
 def get_instance_details(instance_id=None):
@@ -54,7 +57,7 @@ def get_instance_details(instance_id=None):
                     return  temp_dict_obj
         return {}
     except Exception as e:
-        print("Exception--> {}".format(e))
+        logger.error("Exception--> {}".format(e))
         return {}
 
 
@@ -81,5 +84,5 @@ def get_aws_ec2_details(platform):
                     return  temp_dict_obj
         return {}
     except Exception as e:
-        print("Error in getting aws_ec2_details \n".format(e))
+        logger.error("Error in getting aws_ec2_details \n".format(e))
         return {}
