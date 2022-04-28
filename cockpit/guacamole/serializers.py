@@ -1,11 +1,12 @@
 from django.core import serializers
 import json
 from .models import GuacamoleConnectionParameter
+import logging
 
 
 #GET GUACAMOLE CONNECTIONS DETAILS GET
 
-logger=logging.getLogger(__name__)
+logger= logging.getLogger(__name__)
 def get_connection_details(instance_ip=None):
     """returns guacamole connection details based on instance_ip if it exits in db 
     else return None 
