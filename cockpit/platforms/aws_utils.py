@@ -201,36 +201,7 @@ def create_ec2_instance(instance_details):
 
 
 
-# #hosted_zone
-# def create_hosted_zone(platform,public_ip):
-#     client = boto3.client('route53')
-#     response = client.create_hosted_zone(
-#     Name='hands-on.cloud',
-#     CallerReference='handsoncloud001',
-#     )
-#     print(response)
-#     response = client.change_resource_record_sets(
-#     ChangeBatch={
-#         'Changes': [
-#             {
-#                 'Action': 'CREATE',
-#                 'ResourceRecordSet': {
-#                     'Name': 'testwebserver.hands-on.cloud',
-#                     'ResourceRecords': [
-#                         {
-#                             'Value': '3.128.188.18',
-#                         },
-#                     ],
-#                     'TTL': 60,
-#                     'Type': 'A',
-#                 },
-#             },
-#         ],
-#         'Comment': 'Web Server',
-#     },
-#    HostedZoneId='Z00594533FY3S68ROG6V2',
-# )
-# create_hosted_zone('jenkins','127.0.0.1')
+
 
 
 client =boto3.client('route53',
