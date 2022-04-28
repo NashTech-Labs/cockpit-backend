@@ -75,8 +75,7 @@ def get_aws_ec2_details(platform):
         )
         if len(data) !=0:
             for aws_ec2_details_obj in data:
-
-                if aws_ec2_details_obj["fields"]["instance_id"] == platform :
+                if aws_ec2_details_obj["fields"]["platform"] == platform :
                     temp_dict_obj=aws_ec2_details_obj["fields"]
                     return  temp_dict_obj
         return {}

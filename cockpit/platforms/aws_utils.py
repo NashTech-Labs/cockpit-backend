@@ -71,8 +71,7 @@ def create_ec2_instance(instance_details):
             'security_group_id':'',
             'platform': '',
             'user_name' '',
-            'user_email':''
-            'user_data':''
+            'email':''
         }
     """
     user_password=__create_random_password()
@@ -88,7 +87,7 @@ def create_ec2_instance(instance_details):
                 MaxCount=1,
                 InstanceType=instance_details["instance_type"],
                 SubnetId=instance_details["subnet_id"],
-                SecurityGroupIds=instance_details["security_group_ids"],
+                SecurityGroupIds=["{}".format(instance_details["security_group_ids"])],
                 UserData='{}'.format(bash_script_create_user(
                     user_name=instance_details['user_name'],
                     user_password=user_password)

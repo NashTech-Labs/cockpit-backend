@@ -1,4 +1,5 @@
 import os
+from kombu import Queue, Exchange
 """
 Django settings for cockpit project.
 
@@ -152,6 +153,21 @@ CELERY_BROKER_URL =  os.getenv("MESSAGE_BROKER_URL","amqp://guest@localhost:5672
 #CELERY_RESULT_SERIALIZER = 'json'
 CELERY_AMQP_TASK_RESULT_EXPIRES = 1000
 CELERY_IMPORTS=['guacamole.guacamole_utils']
+CELERY_TASK_CREATE_MISSING_QUEUES=True
+CELERY_CREATE_MISSING_QUEUES = True
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_DEFAULT_EXCHANGE_TYPE = 'topic'
+CELERY_DEFAULT_ROUTING_KEY = 'default'
+CELERY_QUEUES = (
+    Queue('default', Exchange('default'), routing_key='default'),
+    Queue('guacamole', Exchange('guacamole'), routing_key='long_tasks'),
+)
+CELERY_ROUTES = {
+    'guacamole.guacamole_utils.*': {
+        'queue': 'guacamole',
+        'routing_key': 'long_tasks',
+    },
+}
 
 # #############EMAIL_SETTINGS #########
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
