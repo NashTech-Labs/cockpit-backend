@@ -2,3 +2,7 @@
 README.md
 .venv
 .gitignore
+cockpit/db.sqlite3
+__pycache__/
+*.py[cod]
+*$py.class

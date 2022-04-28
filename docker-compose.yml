@@ -28,7 +28,7 @@ services:
     container_name: guacd
     image: guacamole/guacd
     networks:
-      cockpit:
+      - cockpit
     restart: on-failure
     volumes:
     - 'drive:/drive:rw'
@@ -43,9 +43,9 @@ services:
       POSTGRES_USER: guacamole_user
     image: postgres:13.4
     networks:
-      cockpit:
+      - cockpit
     ports:
-    - 5432/tcp
+    - 8543:5432/tcp
     restart: on-failure
     volumes:
     - 'init_gpg:/docker-entrypoint-initdb.d:ro'
@@ -68,7 +68,7 @@ services:
     links:
     - guacd
     networks:
-      cockpit:
+      - cockpit
     restart: on-failure
   liquibase:
     image: liquibase/liquibase
@@ -124,10 +124,10 @@ services:
       # - USER_PASSWORD_FILE=/path/to/file #optional
       - USER_NAME=linuxserver #optional
     networks:
-      cockpit:
+      - cockpit
     ports:
-      - 2222:2222
-    restart: unless-stopped
+      - 2222:2222/tcp
+    restart: on-failure
   #cockpit platform pg
   platform_pg:
     container_name: platform_pg
@@ -138,9 +138,9 @@ services:
       POSTGRES_USER: platform_user
     image: postgres:13.4
     networks:
-      cockpit:
+      - cockpit
     ports:
-    - 5432/tcp
+    - 9543:5432/tcp
     restart: on-failure
     volumes:
     - 'init_cpg:/docker-entrypoint-initdb.d:ro'

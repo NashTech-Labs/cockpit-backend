@@ -91,9 +91,9 @@ DATABASES = {
         'PORT':         os.getenv("GUACAMOLE_DB_PORT",'5432'),
     },
     'default':{
-        'NAME':         os.getenv("PLATFORM_DB_NAME","platfrom_db"),       #'platform_db',
+        'NAME':         os.getenv("PLATFORM_DB_NAME","platform_db"),       #'platform_db',
         'ENGINE':       'django.db.backends.postgresql',
-        'USER':         os.getenv("PLATFORM_DB_USER","platfrom_user"),
+        'USER':         os.getenv("PLATFORM_DB_USER","platform_user"),
         'PASSWORD':     os.getenv("PLATFROM_DB_PASSWORD","e8bfc3e6d12443830116b721"),
         'HOST':         os.getenv("PLATFORM_DB_HOST",'platform_pg'),
         'PORT':         os.getenv("PLATFORM_DB_PORT",'5432'),
