@@ -3,6 +3,7 @@ import json
 import logging
 from .models import Instance,AwsEc2Details
 
+# create logger with 'platforms'
 logger = logging.getLogger("platforms")
 
 

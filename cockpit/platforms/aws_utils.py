@@ -2,7 +2,7 @@ from pydoc import cli
 import boto3
 import os,time
 import json
-# from .serializers import create_ec2_entry_in_db
+from .serializers import create_ec2_entry_in_db
 import logging
 import string
 import random
