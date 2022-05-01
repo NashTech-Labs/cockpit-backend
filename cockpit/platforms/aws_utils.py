@@ -8,7 +8,7 @@ import secrets
 
 def __create_random_password():
     return secrets.token_urlsafe(10)
- 
+
 def create_aws_client(client=None):
     try:
         if client is not None:
@@ -81,9 +81,9 @@ def create_ec2_instance(instance_details):
         ec2_client=create_aws_client(client='ec2')
         if ec2_client is not None:
             instances = ec2_client.run_instances(
-                ImageId=instance_details["image_id"], 
+                ImageId=instance_details["image_id"],
                 KeyName=instance_details["key_name"],
-                MinCount=1, 
+                MinCount=1,
                 MaxCount=1,
                 InstanceType=instance_details["instance_type"],
                 SubnetId=instance_details["subnet_id"],
@@ -119,12 +119,12 @@ def create_ec2_instance(instance_details):
                                         instance_details['user_name']
                                         )
 
-                                },                        
+                                },
                             ]
                         }
                 ],
             )
-            
+
             print("response:{}".format(instances))
             PrivateIpAddress=instances["Instances"][0]["NetworkInterfaces"][0]['PrivateIpAddress']
             InstanceId = str(instances["Instances"][0]["InstanceId"])
@@ -151,7 +151,7 @@ def create_ec2_instance(instance_details):
                 describe_instance_status = ec2_client.describe_instance_status(InstanceIds=[InstanceId])
                 print("describe \n{}".format(describe_instance_status))
                 if describe_instance_status["InstanceStatuses"]:
-                    
+
                     instance_code = describe_instance_status["InstanceStatuses"][0]["InstanceState"]["Code"]
                     InstanceStatus = describe_instance_status["InstanceStatuses"][0]["InstanceStatus"]["Status"]
                     SystemStatus = describe_instance_status["InstanceStatuses"][0]["SystemStatus"]["Status"]
@@ -182,7 +182,7 @@ def create_ec2_instance(instance_details):
                 'user_password':'{}'.format(user_password)
                 }
         else:
-            return json_format_instance()    
+            return json_format_instance()
     except Exception as e:
         print("Error in creating ec2 \n{}".format(e))
         return {
@@ -193,6 +193,38 @@ def create_ec2_instance(instance_details):
             'platform':'{}'.format(instance_details['platform']),
             'platform_state': 1401
             }
+
+
+def create_route53_a_record(public_ip,platform):
+
+    try:
+        import uuid
+        unique_str=uuid.uuid4().hex.upper()[0:12].lower()
+        record_name='{0}-{1}.{2}'.format(platform,unique_str,os.getenv('COCKPIT_BASE_DOMAIN'))
+        router53_client=create_aws_client(client='route53')
+
+        response = router53_client.change_resource_record_sets(
+            HostedZoneId=os.getenv('COCKPIT_HOSTEDZONE_ID'),
+            ChangeBatch= {
+                            'Comment': "A record created by cockpit app for {0} for {1}".format(public_ip,platform),
+                            'Changes': [{
+                                'Action': 'CREATE',
+                                'ResourceRecordSet': {
+                                    'Name': record_name,
+                                    'Type': 'A',
+                                    'TTL': 300,
+                                    'ResourceRecords': [{'Value': '{}'.format(public_ip)}]
+                                    }
+                                }]
+                        
+
+                        }            
+            )
+        print("Respone From Route53 Client {}".format(response))
+        return record_name
+    except Exception as e:
+        print("Error in create_route53_a_record \n{}".format(e))
+        return None
 
 
 #instance_details={'image_id':"ami-04505e74c0741db8d","key_name":"mykeypair",'iam_profile':'arn:aws:iam::240360265167:instance-profile/SSMEc2CoreRole','subnet_id':'subnet-00925fb32ec58642b','instance_type':'t2.micro','security_group_ids':['sg-039ab3daa43b8cc52'],'platform':'JENKINS','user_name':'sachinvd','user_email':'something@gmail.com',}

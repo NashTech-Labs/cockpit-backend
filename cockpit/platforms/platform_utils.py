@@ -34,12 +34,19 @@ def create_platform(platform_details):
                 }
                 print("connection_data ;{}".format(connection_data))
                 URL,WS=paltform_guacamole(connection_data)
+                platform_dns_record=create_route53_a_record(
+                    instance_data['public_ip'],
+                    instance_data['platform']
+                    )
                 update_instance_details(
                     {
                         "guacamole_sharing_url":"{}".format(URL['URL']),
                         "guacamole_ws_url":'{}'.format(WS),
-                        "instance_id" : "{}".format(instance_data["instance_id"]),
+                        "platform_dns_record":'{}'.format(platform_dns_record),
+                        "instance_id" : "{}".format(instance_data["instance_id"])
                 })
+
+                print("PLATFORM DNS RECORD: {}".format(platform_dns_record))
                 print("URL In PLATFORM SETUP:{}".format(URL))
             else:
                 print("NOT ABLE GET INSTANCE INTO RUNNING STATE")
