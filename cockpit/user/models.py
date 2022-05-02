@@ -8,7 +8,7 @@ class User(models.Model):
     user_email = models.CharField(max_length=250, blank=False)
 
     class Meta:
-        db_table = "user"
+        db_table = "cockpit_user"
 
     objects = models.Manager()
 

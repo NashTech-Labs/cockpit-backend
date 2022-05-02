@@ -5,6 +5,8 @@ from .mail import *
 
 from cockpit.celery import app 
 from guacamole.guacamole_utils import *
+
+
 @app.task(queue='default')
 def create_platform(platform_details):
     """Create a Requested Platform

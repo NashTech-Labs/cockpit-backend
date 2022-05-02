@@ -4,10 +4,10 @@ import json
 from .models import User
 
 
-def create_ec2_entry_in_db(user_details):
+def create_user_entry_in_db(user_details):
     try:
         User.objects.create(            
-            email=user_details['email'],
+            user_email=user_details['user_email'],
             user_name = user_details['user_name'],
             )
     except Exception as e:
