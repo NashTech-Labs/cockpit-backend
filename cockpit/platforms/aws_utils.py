@@ -71,7 +71,7 @@ def create_ec2_instance(instance_details):
             'security_group_id':'',
             'platform': '',
             'user_name' '',
-            'email':''
+            'user_email':''
         }
     """
     user_password=__create_random_password()
@@ -137,7 +137,8 @@ def create_ec2_instance(instance_details):
                     'platform':'{}'.format(instance_details['platform']),
                     'platform_state': 1003,
                     'user_name':"{}".format(instance_details['user_name']),
-                    'user_password': "{}".format(user_password)
+                    'user_password': "{}".format(user_password),
+                    'user_email': '{}'.format(instance_details['user_email'])
                 }
             )
 
@@ -179,7 +180,8 @@ def create_ec2_instance(instance_details):
                 'platform':'{}'.format(instance_details['platform']),
                 'platform_state':1004,
                 'user_name': '{}'.format(instance_details['user_name']),
-                'user_password':'{}'.format(user_password)
+                'user_password':'{}'.format(user_password),
+                'user_email': '{}'.format(instance_details['user_email'])
                 }
         else:
             return json_format_instance()

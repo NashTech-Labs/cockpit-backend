@@ -1,6 +1,7 @@
 from .aws_utils import *
 from .serializers import *
 from .platform_state import *
+from .mail import *
 
 from cockpit.celery import app 
 from guacamole.guacamole_utils import *
@@ -10,7 +11,7 @@ def create_platform(platform_details):
     arg: 
     {
         "user_name":"sachinvd",
-        "email":"sachinvd@gmail.com",
+        "user_email":"sachinvd@gmail.com",
         "platform":"jenkins"
     }
     """
@@ -19,6 +20,7 @@ def create_platform(platform_details):
         if len(aws_ec2_details) != 0:
             print("aws_ec2_details :{}".format(aws_ec2_details))
             platform_details.update(aws_ec2_details)
+            print("Platform Details {}".format(platform_details))
             instance_data=create_ec2_instance(platform_details)
             update_instance_details(instance_data)
 
@@ -48,11 +50,28 @@ def create_platform(platform_details):
 
                 print("PLATFORM DNS RECORD: {}".format(platform_dns_record))
                 print("URL In PLATFORM SETUP:{}".format(URL))
+                details=get_instance_details(instance_id=instance_data['instance_id'])
+                send_cockpit_mail(details)
             else:
                 print("NOT ABLE GET INSTANCE INTO RUNNING STATE")
+                temp={
+                    "platform_dns_record":None,
+                    "guacamole_sharing_url":None
+                }
+                send_cockpit_mail(platform_details.update(temp))
         else:
             print("send message requested platform is not available cuurrently")
             #send message requested platform is not available cuurrently
+            temp={
+                    "platform_dns_record":None,
+                    "guacamole_sharing_url":None
+                }
+            send_cockpit_mail(platform_details.update(temp))
     except Exception as e:
         print("Error creating platform \n{}".format(e))
+        temp={
+            "platform_dns_record":None,
+            "guacamole_sharing_url":None
+        }
+        send_cockpit_mail(platform_details.update(temp))
         #send message requested platform is not available cuurrently

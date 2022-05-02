@@ -42,7 +42,10 @@ def get_instance_details(instance_id=None):
                     "platform" ,
                     "platform_state",
                     "guacamole_ws_url",
-                    "guacamole_sharing_url" 
+                    "guacamole_sharing_url",
+                    "user_name",
+                    "user_email",
+                    "platform_dns_record"
                 )
             )
         )
