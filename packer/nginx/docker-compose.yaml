@@ -5,6 +5,7 @@ services:
         container_name: jenkins
         volumes:
             - /var/lib/jenkins:/var/lib/jenkins
+            - /var/jenkins_home:/var/jenkins_home
         ports:
             - '8080:8080'
             - '2000:2000'

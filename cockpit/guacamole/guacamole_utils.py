@@ -132,7 +132,7 @@ def __get_connection_websocket_url(connection_id):
         print("Error in get_connection_websocket_url \nError: {}",format(e))
         return {}
 
-@app.task(time_limit=3600,queue='guacamole')
+@app.task(queue='guacamole')
 def __create_active_websocket_connection(payload):
     try:
         websocket.enableTrace(True)
