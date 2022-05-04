@@ -35,10 +35,12 @@ def create_platform_request(request):
             logger.info("user-details {}".format(data))
 
             create_platform.delay(data)
+
             state={
                 "platform_state":1000,
-                "message": PLATFORM_STATE[]
+                "message": "{}".format(PLATFORM_STATE[1000])
             }
+            data.update(state)
 
             return JsonResponse(data)
         return JsonResponse({"message":"invalid request {}".format(request.method)})

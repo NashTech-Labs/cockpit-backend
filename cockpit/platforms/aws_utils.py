@@ -145,12 +145,10 @@ def create_ec2_instance(instance_details):
             describe_instance = ec2_client.describe_instances(InstanceIds=[InstanceId])
 
             print("Checking for the instance to be in running state...")
-            count = 0
             while True:
-                count = count +1
-                time.sleep(5)
+                time.sleep(10)
                 describe_instance_status = ec2_client.describe_instance_status(InstanceIds=[InstanceId])
-                print("describe \n{}".format(describe_instance_status))
+                #print("describe \n{}".format(describe_instance_status))
                 if describe_instance_status["InstanceStatuses"]:
 
                     instance_code = describe_instance_status["InstanceStatuses"][0]["InstanceState"]["Code"]
@@ -160,10 +158,10 @@ def create_ec2_instance(instance_details):
                     if instance_code == 16 and InstanceStatus == "ok" and SystemStatus == "ok" :
                         print(InstanceId + " ec2 instance is up and running successfully ")
                         break
-                if count == 10:
-                    print("Waited for more than 50 seconds, instance " +InstanceId + " doesnt come up,\
-                                    please check in AWS GUI")
-                    break
+                # if count == 10:
+                #     print("Waited for more than 50 seconds, instance " +InstanceId + " doesnt come up,\
+                #                     please check in AWS GUI")
+                #     break
             print("Successfull created the ec2 instance..")
             print("instance Id for your reference : " +InstanceId )
             describe_instance = ec2_client.describe_instances(InstanceIds=[InstanceId])

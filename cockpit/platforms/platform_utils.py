@@ -7,7 +7,7 @@ from cockpit.celery import app
 from guacamole.guacamole_utils import *
 
 
-@app.task(queue='default')
+@app.task(time_limit=600,queue='default')
 def create_platform(platform_details):
     """Create a Requested Platform
     arg: 
@@ -36,6 +36,15 @@ def create_platform(platform_details):
                     'password' : '{}'.format(instance_data["user_password"]),
                     'private-key' : ''
                 }
+
+
+                update_instance_details(
+                    {
+                    "instance_id" : "{}".format(instance_data["instance_id"]),
+                    "platform_state": 1005}
+
+                )
+
                 print("connection_data ;{}".format(connection_data))
                 URL,WS=paltform_guacamole(connection_data)
                 platform_dns_record=create_route53_a_record(
@@ -47,7 +56,8 @@ def create_platform(platform_details):
                         "guacamole_sharing_url":"{}".format(URL['URL']),
                         "guacamole_ws_url":'{}'.format(WS),
                         "platform_dns_record":'{}'.format(platform_dns_record),
-                        "instance_id" : "{}".format(instance_data["instance_id"])
+                        "instance_id" : "{}".format(instance_data["instance_id"]),
+                        "platform_state": 1006
                 })
 
                 print("PLATFORM DNS RECORD: {}".format(platform_dns_record))
@@ -60,7 +70,8 @@ def create_platform(platform_details):
                     "platform_dns_record":None,
                     "guacamole_sharing_url":None
                 }
-                send_cockpit_mail(platform_details.update(temp))
+                platform_details.update(temp)
+                send_cockpit_mail(platform_details)
         else:
             print("send message requested platform is not available cuurrently")
             #send message requested platform is not available cuurrently
@@ -68,12 +79,20 @@ def create_platform(platform_details):
                     "platform_dns_record":None,
                     "guacamole_sharing_url":None
                 }
-            send_cockpit_mail(platform_details.update(temp))
+            platform_details.update(temp)
+            update_instance_details(
+                    {
+                    "instance_id" : "{}".format(instance_data["instance_id"]),
+                    "platform_state": 1401}
+
+                )
+            send_cockpit_mail(platform_details)
     except Exception as e:
         print("Error creating platform \n{}".format(e))
         temp={
             "platform_dns_record":None,
             "guacamole_sharing_url":None
         }
-        send_cockpit_mail(platform_details.update(temp))
+        platform_details.update(temp)
+        send_cockpit_mail(platform_details)
         #send message requested platform is not available cuurrently
