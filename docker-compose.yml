@@ -161,6 +161,7 @@ services:
     depends_on:
       - rabbitmq
       - guacamole
+      - liquibase
   cockpit_celery_default_worker:
     <<: *cockpitapp
     command: celery -A cockpit worker -Q default -n default_worker --loglevel=info --autoscale 4,2
@@ -172,7 +173,8 @@ services:
     ports: []
     depends_on:
       - rabbitmq
-      - guacamole      
+      - guacamole
+      - liquibase      
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq

@@ -23,6 +23,8 @@
     d.route-53
     e.vpc
     f.sqs
+10.docker
+11.nginx
 # how to run the Project on non-docker-env
 
 # 0. Clone the source code from github
