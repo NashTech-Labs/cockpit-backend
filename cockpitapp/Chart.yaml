@@ -1,0 +1,5 @@
+apiVersion: v2
+name: cockpitapp
+description: cockpitapp deployment and nodePort service
+appVersion: 1.0.0   #app
+version: 1.0.0      #chart

@@ -1,0 +1,74 @@
+deploy:
+  replicas: 3
+  image: 
+    name: docker.pkg.github.com/knoldus/cockpit-backend/cockpit-backend_cockpitapp
+    tag: 1.0.0
+  imagePullPolicy: IfNotPresent
+  imagePullSecrets:
+  - name: github
+  port: 9000
+  containerName: cockpitapp
+  strategy:
+    custom: true
+    strategy: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  env: 
+  - name: GUACAMOLE_HOST
+    value: "guacamole:8080"
+  - name: GUACAMOLE_USERNAME
+    value: "guacadmin"
+  - name: GUACAMOLE_PASSWORD
+    value: "guacadmin"
+  - name: GUACAMOLE_DB_NAME
+    value: "guacamole_db"
+  - name: GUACAMOLE_DB_USER
+    value: "guacamole_user"
+  - name: GUACAMOLE_DB_PASSWORD
+    value: "d0aa4251547c12c941cde21"
+  - name: GUACAMOLE_DB_HOST
+    value: "guacamole_pg"
+  - name: GUACAMOLE_DB_PORT
+    value: "5432"
+  - name: COCKPIT_BASE_DOMAIN
+    value: "cockpit.akatsuki.co.in"
+  - name: COCKPIT_HOSTEDZONE_ID
+    value: "Z0281624U7N5EPREEA3L"
+  - name: PLATFORM_DB_NAME
+    value: "platform_db"
+  - name: PLATFORM_DB_USER
+    value: "platform_user"
+  - name: PLATFORM_DB_PASSWORD
+    value: "e8bfc3e6d12443830116b721"
+  - name: PLATFORM_DB_HOST
+    value: "platform_pg"
+  - name: PLATFORM_DB_PORT
+    value: "5432"
+  - name: MESSAGE_BROKER_URL
+    value: "amqp://rabbitmq"
+  - name: AWS_ACCESS_KEY_ID
+    value: AKIA6OELJL5RK4GYOUMC
+  - name: AWS_SECRET_ACCESS_KEY
+    value: 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
+  - name: AWS_DEFAULT_REGION
+    value: "us-east-01"
+  - name: AWS_POLL_DELAY_SECONDS
+    value: "30"
+  - name: AWS_MAX_ATTEMPTS
+    value: "3000"
+  - name: AWS_TIMEOUT_SECONDS
+    value: "3000"
+  - name: EMAIL_HOST_USER
+    value: "cockpit010@gmail.com"
+  - name: EMAIL_HOST_PASSWORD
+    value: "b8670eb6d66882063dbe"
+
+service:
+  type: NodePort
+  port: 9000
+  targetPort: 9000
+  nodePort: 32000
+  name: traffic
+
+

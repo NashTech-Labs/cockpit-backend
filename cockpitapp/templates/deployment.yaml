@@ -1,0 +1,32 @@
+{{- with .Values.deploy }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+    name: {{ $.Release.Name }}-deploy
+spec:
+    replicas: {{ .replicas }}
+    selector:
+        matchLabels:
+            app: {{ $.Release.Name }}
+    {{- if .strategy.custom }}
+    strategy: 
+   {{- include "strategy" . | indent 6}}
+    {{- end }}
+    template:
+      metadata:
+        labels:
+          app: {{ $.Release.Name }}
+      spec:
+       {{- include "imagePullSecrets" . | indent 8 }}
+        containers:
+        - image: {{ .image.name }}:{{ .image.tag }}
+          name: {{ .containerName }}
+          imagePullPolicy: {{ .imagePullPolicy }}
+          ports:
+          - containerPort: {{ .port }}
+          env:
+          {{- range .env }}
+          - name: {{ .name }}
+            value: {{ .value | quote }}
+          {{- end }}
+{{ end }}
