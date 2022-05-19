@@ -1,0 +1,8 @@
+replicaCount: 1
+
+image:
+  repository: docker.pkg.github.com/knoldus/cockpit-backend/cocktip_celery_guacamole_worker
+  pullPolicy: IfNotPresent
+  restart: on-failure
+  
+

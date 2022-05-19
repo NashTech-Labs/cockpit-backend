@@ -5,7 +5,7 @@ metadata:
   labels:
     app: cg
 spec:
-  replicas: 1
+  replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app: cg
@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: cg
-        image: docker.pkg.github.com/knoldus/cockpit-backend/cocktip_celery_guacamole_worker:1.0.0
-        imagePullPolicy: IfNotPresent
-      imagePullSecrets:
-        - name: github
+        image: {{ .Values.image.repository }}
+        imagePullPolicy: {{ .Values.image.pullPolicy }}
+      imagePullSecrets: 
+       - name: github
