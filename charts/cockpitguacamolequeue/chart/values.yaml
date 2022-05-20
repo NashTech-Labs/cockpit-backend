@@ -12,8 +12,8 @@ image:
 
 imagePullSecrets: 
   - name: github
-nameOverride: "cockpit1"
-fullnameOverride: "cockpit1"
+nameOverride: ""
+fullnameOverride: ""
 
 serviceAccount:
   # Specifies whether a service account should be created
