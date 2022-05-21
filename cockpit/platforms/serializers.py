@@ -42,7 +42,10 @@ def get_instance_details(instance_id=None):
                     "platform" ,
                     "platform_state",
                     "guacamole_ws_url",
-                    "guacamole_sharing_url" 
+                    "guacamole_sharing_url",
+                    "user_name",
+                    "user_email",
+                    "platform_dns_record"
                 )
             )
         )
@@ -75,8 +78,7 @@ def get_aws_ec2_details(platform):
         )
         if len(data) !=0:
             for aws_ec2_details_obj in data:
-
-                if aws_ec2_details_obj["fields"]["instance_id"] == platform :
+                if aws_ec2_details_obj["fields"]["platform"] == platform :
                     temp_dict_obj=aws_ec2_details_obj["fields"]
                     return  temp_dict_obj
         return {}

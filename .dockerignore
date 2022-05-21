@@ -6,3 +6,8 @@ cockpit/db.sqlite3
 __pycache__/
 *.py[cod]
 *$py.class
+.envCockpit
+packer
+docker-compose.yml
+liquibase
+charts

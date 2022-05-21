@@ -17,8 +17,9 @@ class Instance(models.Model):
     instance_state = models.CharField(max_length=255,null=False,default='pending')
     platform = models.CharField(max_length=255,blank=True,default='None')
     platform_state= models.IntegerField(blank=True)
-    guacamole_ws_url= models.CharField(max_length=255,blank=True,null=True,default='None')
-    guacamole_sharing_url = models.CharField(max_length=255,blank=True,null=True,default='None')
+    guacamole_ws_url= models.TextField(blank=True,null=True,default='None')
+    guacamole_sharing_url = models.TextField(blank=True,null=True,default='None')
+    platform_dns_record = models.TextField(blank=True,null=True,default='None')
     user_name=models.CharField(max_length=255,blank=True,null=True,default="None")
     user_email=models.CharField(max_length=255,blank=True,null=True,default="None")
     user_password=models.CharField(max_length=255,blank=True,null=True,default="None")
@@ -33,7 +34,7 @@ class Instance(models.Model):
         return self.instance_id
 
 class AwsEc2Details(models.Model):
-    image_id=models.CharField(max_length=255,primary_key=True)
+    image_id=models.CharField(max_length=255)
     instance_type=models.CharField(max_length=255,default='t2.micro')
     subnet_id = models.CharField(max_length=255,null=False, blank=False)
     security_group_ids = models.CharField(max_length=255)

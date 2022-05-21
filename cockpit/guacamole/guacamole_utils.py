@@ -132,7 +132,7 @@ def __get_connection_websocket_url(connection_id):
         print("Error in get_connection_websocket_url \nError: {}",format(e))
         return {}
 
-@app.task
+@app.task(queue='guacamole')
 def __create_active_websocket_connection(payload):
     try:
         websocket.enableTrace(True)
@@ -163,7 +163,7 @@ def get_active_connection_details(connection_details):
                 act_con_details=active_connection_details[act_con]
 
                 if act_con_details['connectionIdentifier'] == connection_details["identifier"]:
-                    return act_con_details["identifier"]
+                    return act_con_details["identifier"],PAYLOAD_URL
         else:
             return None
 
@@ -194,3 +194,27 @@ def get_sharing_profile_url(active_connection_id,connection_id):
     except Exception as e:
         print("Error in get_sharing_profile_url \nError: {}".format(e))
         return None
+
+def paltform_guacamole(instance_data):
+    try:
+        connection_details=create_guacamole_connection(instance_data)
+
+        if len(connection_details) != 0:
+
+            profile=create_sharing_profile(connection_details)
+
+            print("\n profile :{}".format(profile))
+
+            sharing_profile_id=profile['identifier']
+
+            active_connections_id,WS=get_active_connection_details(connection_details)
+            if active_connections_id is not None:
+            #SHARING_PROFILE_URL=get_sharing_profile_url(active_connections_id,sharing_profile_id)
+                return {"URL":"{}".format(get_sharing_profile_url(active_connections_id,sharing_profile_id))},WS
+            else :
+                return {"URL": None}
+        else:
+            return {"URL": None}        
+    except Exception as e:
+        print("Error in paltform_guacamole {}".format(e))
+        return {"URL": None}  
