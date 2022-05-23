@@ -1,7 +1,7 @@
 from django.core import serializers
 import json
 
-from .models import Instance,AwsEc2Details
+from .models import Instance,AwsEc2Details,Default_config
 
 def update_instance_details(instance_details):
     try:
@@ -84,4 +84,26 @@ def get_aws_ec2_details(platform):
         return {}
     except Exception as e:
         print("Error in getting aws_ec2_details \n".format(e))
+        return {}
+
+def get_aws_default_config(version):
+    try:
+        data = json.loads(serializers.serialize('json', Default_config.objects.filter(
+            version=version),
+            fields=(
+                    "platform",
+                    "version",
+                    "framework",
+                    "S3_url",
+                )
+            )
+        )
+        if len(data) !=0:
+            for default_config_obj in data:
+                if default_config_obj["fields"]["platform"] == version :
+                    temp_dict_obj=default_config_obj["fields"]
+                    return  temp_dict_obj
+        return {}
+    except Exception as e:
+        print("Error in getting default_congif \n".format(e))
         return {}

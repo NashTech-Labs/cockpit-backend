@@ -49,3 +49,17 @@ class AwsEc2Details(models.Model):
 
     def __str__(self):
         return self.image_id
+
+class Default_config(models.Model):
+    platform = models.CharField(max_length=255,blank=True,default='None')
+    version= models.IntegerField(blank=True)
+    framework= models.CharField(max_length=255,blank=True,default="None")
+    S3_url= models.TextField(blank=True,null=True,default='None')
+
+    class Meta:
+        db_table = "default_config"
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.version
+
