@@ -1,4 +1,5 @@
 import os
+from kombu import Queue, Exchange
 """
 Django settings for cockpit project.
 
@@ -91,9 +92,9 @@ DATABASES = {
         'PORT':         os.getenv("GUACAMOLE_DB_PORT",'5432'),
     },
     'default':{
-        'NAME':         os.getenv("PLATFORM_DB_NAME","platfrom_db"),       #'platform_db',
+        'NAME':         os.getenv("PLATFORM_DB_NAME","platform_db"),       #'platform_db',
         'ENGINE':       'django.db.backends.postgresql',
-        'USER':         os.getenv("PLATFORM_DB_USER","platfrom_user"),
+        'USER':         os.getenv("PLATFORM_DB_USER","platform_user"),
         'PASSWORD':     os.getenv("PLATFROM_DB_PASSWORD","e8bfc3e6d12443830116b721"),
         'HOST':         os.getenv("PLATFORM_DB_HOST",'platform_pg'),
         'PORT':         os.getenv("PLATFORM_DB_PORT",'5432'),
@@ -151,13 +152,29 @@ CELERY_BROKER_URL =  os.getenv("MESSAGE_BROKER_URL","amqp://guest@localhost:5672
 #CELERY_TASK_SERIALIZER = 'json'
 #CELERY_RESULT_SERIALIZER = 'json'
 CELERY_AMQP_TASK_RESULT_EXPIRES = 1000
-CELERY_IMPORTS=['guacamole.guacamole_utils']
+CELERY_IMPORTS=['guacamole.guacamole_utils','platforms.platform_utils',]
+CELERY_TASK_CREATE_MISSING_QUEUES=True
+CELERY_CREATE_MISSING_QUEUES = True
+CELERY_DEFAULT_QUEUE = 'default'
+CELERY_DEFAULT_EXCHANGE_TYPE = 'topic'
+CELERY_DEFAULT_ROUTING_KEY = 'default'
+CELERY_QUEUES = (
+    Queue('default', Exchange('default'), routing_key='default'),
+    Queue('guacamole', Exchange('guacamole'), routing_key='long_tasks'),
+)
+CELERY_ROUTES = {
+    'guacamole.guacamole_utils.*': {
+        'queue': 'guacamole',
+        'routing_key': 'long_tasks',
+    },
+}
 
 # #############EMAIL_SETTINGS #########
-# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-# EMAIL_HOST = 'smtp.gmail.com'
-# EMAIL_USE_TLS = True
-# EMAIL_PORT = 587
-# EMAIL_HOST_USER = 'your_account@gmail.com'
-# EMAIL_HOST_PASSWORD = 'your accounts password'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+DEFAULT_FROM_EMAIL=os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')#'your_account@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')#'your accounts password'
 
