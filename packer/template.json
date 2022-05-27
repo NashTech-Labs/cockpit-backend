@@ -9,7 +9,7 @@
       "access_key": "{{user `aws_access_key`}}",
       "secret_key": "{{user `aws_secret_key`}}",
       "region": "us-east-1",
-      "source_ami": "ami-046c1557a59fad2f1",
+      "source_ami": "ami-0d65393c0280e5c9d",
       "instance_type": "t2.micro",
       "iam_instance_profile":"SSMEc2CoreRole",
       "ssh_username": "{{user `ssh_username`}}",

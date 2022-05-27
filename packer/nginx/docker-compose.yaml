@@ -4,8 +4,11 @@ services:
         image: jenkins/jenkins:lts
         container_name: jenkins
         volumes:
-            - /var/lib/jenkins:/var/lib/jenkins
-            - /var/jenkins_home:/var/jenkins_home
+        #     - /var/lib/jenkins:/var/lib/jenkins
+        #     - /var/jenkins_home:/var/jenkins_home
+          - /usr/bin/docker:/usr/bin/docker 
+          - /var/run/docker.sock:/var/run/docker.sock
+
         ports:
             - '8080:8080'
             - '2000:2000'
@@ -16,6 +19,7 @@ services:
             - JENKINS_SLAVE_AGENT_PORT=2000
             - JENKINS_JAVA_OPTIONS=-Djava.awt.headless=true
             - JENKINS_LOG=/var/jenkins_home/logs/jenkins.log
+            #- JAVA_OPTS=-Djenkins.install.runSetupWizard=false
         #command: --enable-future-java
     nginx:
         image: nginx:latest
