@@ -1,3 +1,7 @@
+import logging
+
+logger = logging.getLogger()
+
 
 def get_ssh_connection(connections_details):
     """return ssh connection payload"""
@@ -59,5 +63,5 @@ def get_ssh_connection(connections_details):
         }
         return SSH_CONNECTION
     except Exception as e:
-        print("Error in SSH connection config \nError:{}".format(e))
+        logger.error("Error in SSH connection config \nError:{}".format(e))
         return None
