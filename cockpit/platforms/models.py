@@ -52,12 +52,28 @@ class AwsEc2Details(models.Model):
 
 class Default_config(models.Model):
     platform = models.CharField(max_length=255,blank=True,default='None')
-    version= models.IntegerField(blank=True)
+    version= models.CharField(max_length=200,blank=True)
     framework= models.CharField(max_length=255,blank=True,default="None")
     S3_url= models.TextField(blank=True,null=True,default='None')
 
     class Meta:
         db_table = "default_config"
+    objects = models.Manager()
+
+    def __str__(self):
+        return self.version
+
+class Project_details(models.Model):
+    git_url = models.CharField(blank=True,null=True,default='None')
+    langauge = models.CharField(max_length=200,blank=True,default='None')
+    version = models.CharField(max_length=200,blank=True)
+    framework = models.CharField(max_length=200,blank=True,default="None")
+    git_user = models.CharField(max_length=200,blank=True,default="None")
+    git_token = models.CharField(max_length=250,blank=True,default="None")
+    git_branch = models.CharField(max_length=200,blank=True,default="None")
+
+    class Meta:
+        db_table = "project_details"
     objects = models.Manager()
 
     def __str__(self):
