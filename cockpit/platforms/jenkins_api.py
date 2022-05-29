@@ -98,6 +98,40 @@ class JenkinsJobBuilderExecutable(object):
             headers=headers
         )
         return payload['json']['credentials']['id']
+    def create_jenkins_user(self,jusername=None,jpassword=None,jemail=None,):
+
+        REST_API="http://{0}:{1}@{2}/securityRealm/createAccountByAdmin".format(self.username,self.token,self.server[7:])
+        print("REST_API:{}".format(REST_API))
+
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+
+        payload= {
+            
+            "username": jusername, 
+            "password1": jpassword,
+            "$redact": [jpassword, jpassword], 
+            "password2": jpassword, 
+            "fullname": jusername, 
+            "email": jemail,
+            "Submit":"Create User",
+            "json": 
+                    {
+                        "username": jusername, 
+                        "password1": jpassword,
+                        "$redact": [jpassword, jpassword], 
+                        "password2": jpassword, 
+                        "fullname": jusername, 
+                        "email": jemail
+                    }
+            }
+        print("DATA: {}".format(urllib.parse.urlencode(payload)))
+        r = requests.post(
+            data=urllib.parse.urlencode(payload),
+            url=REST_API,
+            headers=headers
+        )
+        
+        return r.status_code
 
 def create_job_yml(
     git_url=None,
@@ -131,6 +165,8 @@ def create_job_yml(
         repo-tag: {4}
         file-path: "{5}"
         build-context: "{6}"
+        server:
+            uri: "{7}"
     """.format(
         git_url,
         git_credentials_id,
@@ -138,7 +174,8 @@ def create_job_yml(
         docker_reponame,
         docker_tag,
         docker_file_path,
-        docker_build_context
+        docker_build_context,
+        os.getenv("JENKINS_DOCKER_DEAMON","unix:///var/run/docker.sock")
     )
     return yaml.safe_load(yaml__str)
 

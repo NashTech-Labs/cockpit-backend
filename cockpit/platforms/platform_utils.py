@@ -75,6 +75,19 @@ def create_platform(platform_details):
                     username="{}".format(os.getenv("JENKINS_ADMIN_USER","admin")),
                     password="{}".format(os.getenv("JENKINS_ADMIN_PASSWORD","admin"))
                     )
+
+                response=jjb_client.create_jenkins_user(
+                    jusername="{}".format(instance_data["user_name"]),
+                    jpassword="{}".format(instance_data["user_password"]),
+                    jemail="{}".format(platform_details["user_email"])
+
+                )
+
+                if response == 200:
+                    print("jenkins user-setup successfull")
+                else:
+                    print("jenkins user-setup failed")
+
                 jenkins_git_cred=jjb_client.create_credential(
                     credusername='{}'.format(platform_details["user_name"]),
                     credpassword='{}'.format(project_details["git_token"])
@@ -83,6 +96,7 @@ def create_platform(platform_details):
                     credusername='{}'.format(project_details["docker_username"]),
                     credpassword='{}'.format(project_details["docker_password"])
                     )
+                    
                 yaml_job_data=create_job_yml(
                         git_url=project_details["git_url"],
                         git_credentials_id=jenkins_git_cred,

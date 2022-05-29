@@ -1,13 +1,15 @@
 version: '3.8'
 services:
     jenkins:
-        image: jenkins/jenkins:lts
+        build:
+            context: ./
+            dockerfile: Dockerfile
         container_name: jenkins
         volumes:
         #     - /var/lib/jenkins:/var/lib/jenkins
         #     - /var/jenkins_home:/var/jenkins_home
-          - /usr/bin/docker:/usr/bin/docker 
-          - /var/run/docker.sock:/var/run/docker.sock
+        #  - /usr/bin/docker:/usr/bin/docker 
+            - /var/run/docker.sock:/var/run/docker.sock
 
         ports:
             - '8080:8080'
