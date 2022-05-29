@@ -5,6 +5,8 @@ import xml.etree.ElementTree as ET
 import jenkins
 import requests
 import urllib,os
+import yaml
+import os
 
 
 class JenkinsJobBuilderExecutable(object):
@@ -41,9 +43,9 @@ class JenkinsJobBuilderExecutable(object):
 
     def generate_xml(self, template, output,**kwargs):
     
-        exit_status,log,err=self.execute_cmd("test", template, output,**kwargs)
+        exit_status,log,err=self.execute_cmd("test", template, "{0}/{1}".format(os.getenv("JENKINS_CONFIG"),output),**kwargs)
         if exit_status == 0:
-            return "{}/config.xml".format(output)
+            return "{0}/{1}/jjb_job".format(os.getenv("JENKINS_CONFIG"),output)
         else:
             return None
 
@@ -95,7 +97,58 @@ class JenkinsJobBuilderExecutable(object):
             url=REST_API,
             headers=headers
         )
-        return r
+        return payload['json']['credentials']['id']
 
+def create_job_yml(
+    git_url=None,
+    git_credentials_id=None,
+    git_branch=None,
+    docker_reponame=None,
+    docker_tag=None,
+    docker_file_path=None,
+    docker_build_context=None,
+):
+    yaml__str="""
+- project:
+    name: jjb_job
+    project-type: pipeline  
+    jobs:
+    - jjb_job
 
-        
+- job-template:
+    name: jjb_job
+    description: build-docker
+    display-name: build-docker
+    scm:
+    - git:
+        url: "{0}"
+        credentials-id: "{1}"
+        branches:
+            - "{2}"
+    builders:
+    - docker-build-publish:
+        repo-name: "{3}"
+        repo-tag: {4}
+        file-path: "{5}"
+        build-context: "{6}"
+    """.format(
+        git_url,
+        git_credentials_id,
+        git_branch,
+        docker_reponame,
+        docker_tag,
+        docker_file_path,
+        docker_build_context
+    )
+    return yaml.safe_load(yaml__str)
+
+def create_yaml_file(yaml_data,jenkins_url,file_path=os.getenv("JENKINS_CONFIG","/config")):
+
+    file_dir="{0}/{1}/ymal".format(file_path,jenkins_url)
+    file="{0}/config.yaml".format(file_dir)
+    
+    os.makedirs(file_dir)
+
+    with open(file, 'w') as outfile:
+        yaml.safe_dump(yaml_data, outfile, default_flow_style=False)
+    return file

@@ -1,7 +1,7 @@
 from django.core import serializers
 import json
 
-from .models import Instance,AwsEc2Details
+from .models import Instance,AwsEc2Details,ProjectDetails
 
 def update_instance_details(instance_details):
     try:
@@ -85,3 +85,25 @@ def get_aws_ec2_details(platform):
     except Exception as e:
         print("Error in getting aws_ec2_details \n".format(e))
         return {}
+
+def create_project_details_entry_in_db(project_details):
+    try:
+        ProjectDetails.objects.create(            
+            git_url = project_details['project_details']['git_url'],
+            git_branch = project_details['project_details']['git_branch'],
+            git_token = project_details['project_details']['git_token'],
+            docker_reponame = project_details['project_details']['docker_reponame'],
+            docker_tag = project_details['project_details']['docker_tag'],
+            docker_file_path= project_details['project_details']['docker_file_path'],
+            docker_build_context = project_details['project_details']['docker_build_context'],
+            docker_username = project_details['project_details']['docker_username'],
+            docker_password = project_details['project_details']['docker_password'],
+            platform= project_details['platform'],
+            language= project_details['project_details']['language'],
+            version= project_details['project_details']['version'],
+            framework = project_details['project_details']['framework'],
+            user_name = project_details['user_name'],
+            user_email = project_details['user_email']
+            )
+    except Exception as e:
+        print("Error creating instance details in DB \n{}".format(e))

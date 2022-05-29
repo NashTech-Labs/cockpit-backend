@@ -5,18 +5,35 @@ from .mail import *
 
 from cockpit.celery import app 
 from guacamole.guacamole_utils import *
+from .jenkins_api import *
 
 
 @app.task(time_limit=600,queue='default')
 def create_platform(platform_details):
     """Create a Requested Platform
     arg: 
-    {
-        "user_name":"sachinvd",
-        "user_email":"sachinvd@gmail.com",
-        "platform":"jenkins"
-    }
+        {
+            "user_name":"sachinvd",
+            "user_email":"sachinvd@gmail.com",
+            "platform":"jenkins",
+            "project_details":{
+                "git_url":"",
+                "git_branch":"",
+                "git_token":"",
+                "docker_reponame":"",
+                "docker_tag":"",
+                "docker_registry_url":"",
+                "docker_username":"",
+                "docker_password":"",
+                "docker_file_path":"",
+                "docker_build_context":"",
+                "language":"",
+                "version":"",
+                "framework":""
+            }
+        }
     """
+    project_details=platform_details["project_details"]
     try:
         aws_ec2_details=get_aws_ec2_details(platform_details["platform"])
         if len(aws_ec2_details) != 0:
@@ -46,11 +63,45 @@ def create_platform(platform_details):
                 )
 
                 print("connection_data ;{}".format(connection_data))
-                URL,WS=paltform_guacamole(connection_data)
+
+                
                 platform_dns_record=create_route53_a_record(
                     instance_data['public_ip'],
                     instance_data['platform']
                     )
+
+                jjb_client=JenkinsJobBuilderExecutable(
+                    server="http://{}".format(instance_data["public_ip"]),
+                    username="{}".format(os.getenv("JENKINS_ADMIN_USER","admin")),
+                    password="{}".format(os.getenv("JENKINS_ADMIN_PASSWORD","admin"))
+                    )
+                jenkins_git_cred=jjb_client.create_credential(
+                    credusername='{}'.format(platform_details["user_name"]),
+                    credpassword='{}'.format(project_details["git_token"])
+                    )
+                jenkins_docker_cred=jjb_client.create_credential(
+                    credusername='{}'.format(project_details["docker_username"]),
+                    credpassword='{}'.format(project_details["docker_password"])
+                    )
+                yaml_job_data=create_job_yml(
+                        git_url=project_details["git_url"],
+                        git_credentials_id=jenkins_git_cred,
+                        git_branch=project_details["git_branch"],
+                        docker_reponame=project_details["docker_reponame"],
+                        docker_tag=project_details["docker_tag"],
+                        docker_file_path=project_details["docker_file_path"],
+                        docker_build_context=project_details["docker_build_context"]
+
+                        )
+                    
+                yaml_job_path=create_yaml_file(yaml_job_data,platform_dns_record,file_path=os.getenv("JENKINS_CONFIG","/config"))
+                xml_job_path=jjb_client.generate_xml(yaml_job_path,platform_dns_record)
+                jjb_client.create_job(xml_job_path,'jjb_job')
+
+                print("XML JOB PATH {0}\n YAML JOB PATH {1}".format(xml_job_path,yaml_job_path))
+                
+                URL,WS=paltform_guacamole(connection_data)
+
                 update_instance_details(
                     {
                         "guacamole_sharing_url":"{}".format(URL['URL']),

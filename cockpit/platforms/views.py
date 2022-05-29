@@ -20,7 +20,22 @@ def create_platform_request(request):
     """{
             "user_name":"sachinvd",
             "user_email":"sachinvd@gmail.com",
-            "platform":"jenkins"
+            "platform":"jenkins",
+            "project_details":{
+                "git_url":"",
+                "git_branch":"",
+                "git_token":"",
+                "docker_reponame":"",
+                "docker_tag":"",
+                "docker_registry_url":"",
+                "docker_username":"",
+                "docker_password":"",
+                "docker_file_path":"",
+                "docker_build_context":"",
+                "language":"",
+                "version":"",
+                "framework":""
+            }
         }
     """
     try:
@@ -31,6 +46,7 @@ def create_platform_request(request):
             _temp_request_obj.update(data)
 
             create_user_entry_in_db(data)
+            create_project_details_entry_in_db(data)
 
             logger.info("user-details {}".format(data))
 

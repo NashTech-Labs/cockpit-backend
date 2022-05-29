@@ -1,6 +1,6 @@
 FROM python:latest
 
-RUN apt install jenkins-job-builder -y 1> /dev/null 2>&1
+RUN apt update && apt install jenkins-job-builder -y 1>/dev/null 2>&1
 
 RUN mkdir /cockpit
 RUN mkdir /config
