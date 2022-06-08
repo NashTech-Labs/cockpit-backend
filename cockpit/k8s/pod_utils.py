@@ -1,5 +1,4 @@
-import json
-from kubernetes import client, config
+from kubernetes import client
 from kubernetes.client import ApiClient
 
 
