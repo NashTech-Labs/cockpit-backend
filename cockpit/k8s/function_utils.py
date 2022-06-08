@@ -52,7 +52,7 @@ GET_ACTIONS_JSON= {
             "get-job":get_jobs,
             "get-statefullset":get_statefulsets,
             "get-replicaset":get_replicasets,
-            # "get-configmap",
-            # "get-secret",
+            "get-configmap":get_configmaps,
+            "get-secret":get_secrets,
             # "get-namespace:",
         }
