@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'guacamole.apps.GuacamoleConfig',
     'platforms.apps.PlatformsConfig',
-    'user.apps.UserConfig'
+    'user.apps.UserConfig',
+    'k8s.apps.K8SConfig'
 ]
 
 MIDDLEWARE = [
