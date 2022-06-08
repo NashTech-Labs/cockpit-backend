@@ -18,5 +18,7 @@ from django.urls import path,include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('', include('guacamole.urls'))
+    path('', include('guacamole.urls')),
+    path('', include('platforms.urls')),
+    path('', include('k8s.urls'))
 ]

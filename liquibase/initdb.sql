@@ -483,7 +483,14 @@ CREATE INDEX guacamole_connection_permission_connection_id
 
 CREATE INDEX guacamole_connection_permission_entity_id
     ON guacamole_connection_permission(entity_id);
-
+  guacamole: &guacamole
+    container_name: guacamole
+    depends_on:
+    - guacamole_pg
+    environment:
+      GUACD_HOSTNAME: guacd
+      POSTGRES_DATABASE: guacamole_db
+      POSTGRES_HOSTNAME: guacamole_pg
 --
 -- Table of connection group permissions. Each group permission grants a user
 -- or user group specific access to a connection group.
