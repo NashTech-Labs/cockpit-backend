@@ -46,13 +46,13 @@ GET_ACTIONS=(
 
 GET_ACTIONS_JSON= {
             "get-pod":get_pods,
-            # "get-namespace:",
-            # "get-deployment",
-            # "get-daemonset",
-            # "get-cronjob",
-            # "get-job",
-            # "get-statefullset",
+            "get-deployment":get_deployments,
+            "get-daemonset":get_daemonsets,
+            "get-cronjob":get_cronjobs,
+            "get-job":get_jobs,
+            "get-statefullset":get_statefulsets,
+            "get-replicaset":get_replicasets,
             # "get-configmap",
             # "get-secret",
-            # "get-replicaset"
+            # "get-namespace:",
         }
