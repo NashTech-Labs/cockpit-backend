@@ -64,7 +64,7 @@ services:
       POSTGRES_USER: guacamole_user
     image: guacamole/guacamole
     ports:
-      - 8080:8080/tcp  
+      - 8081:8080/tcp  
     links:
     - guacd
     networks:
@@ -138,7 +138,9 @@ services:
       python manage.py makemigrations platforms
       python manage.py migrate platforms 
       python manage.py makemigrations user
-      python manage.py migrate user 
+      python manage.py migrate user
+      python manage.py makemigrations k8s
+      python manage.py migrate k8s
       python manage.py runserver 0.0.0.0:8000
     env_file:
      .envCockpit
