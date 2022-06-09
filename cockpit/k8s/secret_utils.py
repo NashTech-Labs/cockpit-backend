@@ -45,3 +45,36 @@ def get_secrets(cluster_details,namespace="default",all_namespaces=False):
             data=__format_data_for_secret(secret_list)
             #print("secrets under namespaces {}: {}".format(namespace,data))
             return data
+
+
+from django.shortcuts import render
+import json
+from kubernetes import client, config
+#from rest_framework.decorators import api_view
+
+
+def create_secret(cluster_details , data , string_data):
+    client_api= __get_kubernetes_corev1client(
+            bearer_token=cluster_details["bearer_token"],
+            api_server_endpoint=cluster_details["api_server_endpoint"],
+        )
+    secret = client.V1Secret(
+        api_version="v1",
+        kind="Secret",
+        metadata=client.V1ObjectMeta(name="deekasha-02"),
+        data=data , 
+        string_data=string_data
+    )
+
+    api = client_api.create_namespaced_secret(namespace="default", body=secret)
+    return api
+
+
+# stringdata={
+#     "app": "cockpit"
+# }
+# data={
+#     "app-01": "Y29ja3BpdAo="
+# }
+
+#create_secret(cluster_details, data , stringdata)

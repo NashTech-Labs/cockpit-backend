@@ -38,10 +38,31 @@ def get_configmaps(cluster_details,namespace="default",all_namespaces=False):
         if all_namespaces is True:
             configmap_list =client_api.list_config_map_for_all_namespaces(watch=False)
             data=__format_data_for_configmap(configmap_list)
-            #print("configmaps under all namespaces: {}".format(data))
             return data
         else:
             configmap_list = client_api.list_namespaced_config_map(namespace)
             data=__format_data_for_configmap(configmap_list)
-            #print("configmaps under namespaces {}: {}".format(namespace,data))
             return data
+
+
+
+def create_config_map(cluster_details, cm_data):
+    client_api= __get_kubernetes_corev1client(
+            bearer_token=cluster_details["bearer_token"],
+            api_server_endpoint=cluster_details["api_server_endpoint"],
+        )
+    configmap = client.V1ConfigMap(
+        api_version="v1",
+        kind="ConfigMap",
+        metadata=client.V1ObjectMeta(name="deekasha-01"),
+        data=cm_data
+    )
+
+    api = client_api.create_namespaced_config_map(namespace="default", body=configmap)
+    return api
+
+
+# data={
+#     "app": "cockpit"
+# }
+#create_config_map(cluster_details,data)
