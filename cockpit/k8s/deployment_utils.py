@@ -1,5 +1,7 @@
 from kubernetes import client
 from kubernetes.client import ApiClient
+import yaml
+from os import path
 
 def __get_kubernetes_appsv1client(bearer_token,api_server_endpoint):
     try:
@@ -44,3 +46,15 @@ def get_deployments(cluster_details,namespace="default",all_namespaces=True):
             data=__format_data_for_deployment(deploy_list) 
             print("DeploySet under namespaces {}: {}".format(namespace,data))            
             return data
+def create_deployment(cluster_details):
+    client_api= __get_kubernetes_appsv1client(
+            bearer_token=cluster_details["bearer_token"],
+            api_server_endpoint=cluster_details["api_server_endpoint"],
+        )
+    with open(path.join(path.dirname(__file__), "nginx-deployment.yaml")) as f:
+        dep = yaml.safe_load(f)
+        resp = client_api.create_namespaced_deployment(
+            body=dep, namespace="default")
+        print("Deployment created. status='%s'" % resp.metadata.name)
+
+# create_deployment(cluster_details)

@@ -1,0 +1,21 @@
+Description: >-
+  In this cloudformation temlate: I created two vpcs in the same region and each
+  vpc have one public subnet and one private subnet. In private subnets I
+  launched one ec2 instance.
+
+ Resources:
+  VPC1:
+   Type: 'AWS::EC2::VPC'
+   Properties:
+    CidrBlock: 192.168.0.0/16
+ 
+  publicsubnetinVPC1:
+   Type: 'AWS::EC2::Subnet'
+    Properties:
+    VpcId: !Ref VPC1
+    CidrBlock: 192.168.0.0/24
+  privatesubnetinVPC1:
+   Type: 'AWS::EC2::Subnet'
+    Properties:
+    VpcId: !Ref VPC1
+    CidrBlock: 192.168.1.0/24
