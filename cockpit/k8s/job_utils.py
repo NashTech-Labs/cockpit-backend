@@ -1,5 +1,8 @@
-from kubernetes import client
+from kubernetes import client, config
 from kubernetes.client import ApiClient
+
+
+JOB_NAME = "pi"
 
 def __get_kubernetes_batchv1client(bearer_token,api_server_endpoint):
     try:
@@ -45,3 +48,34 @@ def get_jobs(cluster_details,namespace="default",all_namespaces=True):
             data=__format_data_for_job(job_list)
             print("jobs under namespaces {}: {}".format(namespace,data))
             return data
+
+
+
+def create_job_object(cluster_details):
+    client_api= __get_kubernetes_batchv1client(
+        bearer_token=cluster_details["bearer_token"],
+        api_server_endpoint=cluster_details["api_server_endpoint"],
+        )
+    container = client.V1Container(
+        name="pi",
+        image="perl",
+        command=["perl", "-Mbignum=bpi", "-wle", "print bpi(2000)"])
+    template = client.V1PodTemplateSpec(
+        metadata=client.V1ObjectMeta(labels={"app": "pi"}),
+        spec=client.V1PodSpec(restart_policy="Never", containers=[container]))
+    spec = client.V1JobSpec(
+        template=template,
+        backoff_limit=4)
+    job = client.V1Job(
+        api_version="batch/v1",
+        kind="Job",
+        metadata=client.V1ObjectMeta(name=JOB_NAME),
+        spec=spec)
+    api_response = client_api.create_namespaced_job(
+        body=job,
+        namespace="default")
+
+    return api_response
+
+
+
