@@ -56,3 +56,7 @@ GET_ACTIONS_JSON= {
             "get-secret":get_secrets,
             # "get-namespace:",
         }
+
+CREATE_ACTIONS= {
+    "create-pod": create_pod
+}
