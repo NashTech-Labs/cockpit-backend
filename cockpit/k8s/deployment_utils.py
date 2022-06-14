@@ -118,7 +118,6 @@ def update_deployment(cluster_details,k8s_object_name=None,yaml_body=None,namesp
             body=yaml_body
         )
         data=__format_data_for_create_deployment(resp)
-        logger.error("DDDDDDDDDDDDDDDDDD{}".format(data))
         return data
     except ApiException as e:
         print("ERROR IN update_deployment:\n{}".format(e.body))

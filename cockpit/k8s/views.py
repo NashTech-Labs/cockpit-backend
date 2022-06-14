@@ -348,8 +348,11 @@ def update_cluster_api(request):
                 )
                 return JsonResponse(response_data)
             else:
-                logger.error("TESEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE")
-                k8s_objects=api_function(cluster_details,k8s_object_name=k8s_object_name,yaml_body=yaml_body,namespace=namespace)
+                k8s_objects=api_function(   cluster_details,
+                                            k8s_object_name=k8s_object_name,
+                                            yaml_body=yaml_body,
+                                            namespace=namespace
+                                        )
                 response_data.update(
                         {
                             "message":"UPDATE KUBERNETES CLUSTER OBJECTS {}".format(k8s_object_name),
@@ -357,6 +360,7 @@ def update_cluster_api(request):
                             "data":k8s_objects
                         }
                     )
+                return JsonResponse(response_data)
         else:
             return JsonResponse({"message":"invalid request {}".format(request.method)})
     except Exception as e:
