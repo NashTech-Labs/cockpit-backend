@@ -114,8 +114,7 @@ def delete_configmap(cluster_details,k8s_object_name=None,namespace="default"):
                 name=k8s_object_name,
                 namespace="{}".format(namespace),
                 body=client.V1DeleteOptions(
-                    propagation_policy="Foreground", grace_period_seconds=5
-            )
+                    propagation_policy="Foreground", grace_period_seconds=5)
             )
 
         data=__format_data_for_create_configmap(resp)
