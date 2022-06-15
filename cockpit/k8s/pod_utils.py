@@ -102,7 +102,6 @@ def update_pod(cluster_details,yaml_body=None,namespace="default"):
         print("TYPE:{}".format(type(e)))
 
 
-# user need to provide .yaml manifest file to create pod. as well as namespace.
 
 
 
