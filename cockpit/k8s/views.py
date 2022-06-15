@@ -172,6 +172,7 @@ def create_cluster_api(request):
 
             api_function=CREATE_ACTIONS_JSON[data["action"]]
             cluster_details=get_cluster_details(cluster_name=cluster_name)
+            k8s_object_name=data["metadata"]["k8s_object_name"]
 
             response_data={
                 "cluster_name":"{}".format(cluster_name),
@@ -191,7 +192,7 @@ def create_cluster_api(request):
                 k8s_objects=api_function(cluster_details,yaml_body=yaml_body,namespace=namespace)
                 response_data.update(
                         {
-                            "message":"LIST ALL KUBERNETES CLUSTER OBJECTS",
+                            "message":"CREATE KUBERNETES CLUSTER OBJECTS {}".format(k8s_object_name),
                             "status_code":0,
                             "data":k8s_objects
                         }

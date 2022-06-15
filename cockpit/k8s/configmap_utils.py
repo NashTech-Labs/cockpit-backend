@@ -78,3 +78,49 @@ def create_configmap(cluster_details,yaml_body=None,namespace="default"):
         print("ERROR IN create_deployment:\n{}".format(e.body))
         print("TYPE :{}".format(type(e)))
         return __format_data_for_create_configmap(e.body)
+
+def update_configmap(cluster_details,k8s_object_name=None,yaml_body=None,namespace="default"):
+    # Configs can be set in Configuration class directly or using helper
+    # utility. If no argument provided, the config will be loaded from
+    # default location.
+    try:
+        client_api= __get_kubernetes_corev1client(
+                bearer_token=cluster_details["bearer_token"],
+                api_server_endpoint=cluster_details["api_server_endpoint"],
+            )
+        resp = client_api.patch_namespaced_config_map(
+            name=k8s_object_name,
+            body=yaml_body,
+            namespace="{}".format(namespace)
+            )
+
+        data=__format_data_for_create_configmap(resp)
+        return data
+    except ApiException as e:
+        print("ERROR IN create_deployment:\n{}".format(e.body))
+        print("TYPE :{}".format(type(e)))
+        return __format_data_for_create_configmap(e.body)
+
+def delete_configmap(cluster_details,k8s_object_name=None,namespace="default"):
+    # Configs can be set in Configuration class directly or using helper
+    # utility. If no argument provided, the config will be loaded from
+    # default location.
+    try:
+        client_api= __get_kubernetes_corev1client(
+                bearer_token=cluster_details["bearer_token"],
+                api_server_endpoint=cluster_details["api_server_endpoint"],
+            )
+        resp = client_api.delete_namespaced_config_map(
+                name=k8s_object_name,
+                namespace="{}".format(namespace),
+                body=client.V1DeleteOptions(
+                    propagation_policy="Foreground", grace_period_seconds=5
+            )
+            )
+
+        data=__format_data_for_create_configmap(resp)
+        return data
+    except ApiException as e:
+        print("ERROR IN create_deployment:\n{}".format(e.body))
+        print("TYPE :{}".format(type(e)))
+        return __format_data_for_create_configmap(e.body)

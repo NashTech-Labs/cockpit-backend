@@ -70,27 +70,27 @@ CREATE_ACTIONS_JSON= {
         }
 
 DELETE_ACTIONS_JSON= {
-            # "delete-pod":delete_pod,
+            "delete-pod":delete_pod,
             "delete-deployment":delete_deployment,
-            # "delete-daemonset":delete_daemonset,
-            # "delete-cronjob":delete_cronjob,
-            # "delete-job":delete_job,
+            "delete-daemonset":delete_daemonset,
+            "delete-cronjob":delete_cronjob,
+            "delete-job":delete_job,
             # #"delete-statefulset":delete_statefulset,
-            # "delete-replicaset":delete_replicaset,
-            # "delete-configmap":delete_configmap,
-            # "delete-secret":delete_secret,
-            # # "get-namespace:",
+            "delete-replicaset":delete_replicaset,
+            "delete-configmap":delete_configmap,
+            "delete-secret":delete_secret,
+            #"get-namespace:",
         }
 
 UPDATE_ACTIONS_JSON= {
-            # "update-pod":update_pod,
+            "update-pod":update_pod,
             "update-deployment":update_deployment,
-            # "update-daemonset":update_daemonset,
-            # "update-cronjob":update_cronjob,
-            # "update-job":update_job,
+            "update-daemonset":update_daemonset,
+            "update-cronjob":update_cronjob,
+            "update-job":update_job,
             # #"update-statefulset":update_statefulset,
-            # "update-replicaset":update_replicaset,
-            # "update-configmap":update_configmap,
-            # "update-secret":update_secret,
+            "update-replicaset":update_replicaset,
+            "update-configmap":update_configmap,
+            "update-secret":update_secret,
             # # "get-namespace:",
         }
