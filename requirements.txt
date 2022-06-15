@@ -10,3 +10,4 @@ PyYAML==6.0
 python-jenkins==1.7.0
 kubernetes==23.6.0
 kombu==5.2.4
+django-cors-headers==3.13.0
