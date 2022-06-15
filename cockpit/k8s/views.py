@@ -5,11 +5,24 @@ from .function_utils import *
 import json,base64,yaml
 from platforms.platform_state import *
 from django.views.decorators.csrf import csrf_exempt
+from .serializers import list_imported_cluster
 
 import logging
 
 #Get an instance of a specific named logger
 logger = logging.getLogger('k8s-view')
+
+@csrf_exempt
+def get_cluster_imported_list(request):
+    try:
+        if request.method == 'GET':
+            data=list_imported_cluster()
+            return JsonResponse(data)
+        else:
+            return JsonResponse({"clusters":[],"message":"INVALID REQUEST METHOD"})
+    except Exception as e:
+        logger.exception("ERROR IN GET CLUSTER LIST:\n{}".format(e))
+        return JsonResponse({"clusters":[],"message":"EXCEPTION IN LIST CLUSTERS"})
 
 @csrf_exempt
 def import_cluster(request):
