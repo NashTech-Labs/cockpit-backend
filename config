@@ -1,0 +1,7 @@
+{
+    "auths": {
+        "docker.pkg.github.com": {
+            "auth": "cGl5dXNoa25vbGR1czpnaHBfQlk0bTM4M0ZJdloxS1p0b3RYejFBR01EVGJqWnh3MWR5b1RF"
+        }
+    }
+}
