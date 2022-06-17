@@ -50,9 +50,47 @@ GET_ACTIONS_JSON= {
             "get-daemonset":get_daemonsets,
             "get-cronjob":get_cronjobs,
             "get-job":get_jobs,
-            "get-statefullset":get_statefulsets,
+            "get-statefulset":get_statefulsets,
             "get-replicaset":get_replicasets,
             "get-configmap":get_configmaps,
             "get-secret":get_secrets,
+            "get-namespace":get_namespace,
+        }
+CREATE_ACTIONS_JSON= {
+            "create-pod":create_pod,
+            "create-deployment":create_deployment,
+            "create-daemonset":create_daemonset,
+            "create-cronjob":create_cronjob,
+            "create-job":create_job,
+            #"create-statefulset":create_statefulset,
+            "create-replicaset":create_replicaset,
+            "create-configmap":create_configmap,
+            "create-secret":create_secret,
             # "get-namespace:",
+        }
+
+DELETE_ACTIONS_JSON= {
+            "delete-pod":delete_pod,
+            "delete-deployment":delete_deployment,
+            "delete-daemonset":delete_daemonset,
+            "delete-cronjob":delete_cronjob,
+            "delete-job":delete_job,
+            # #"delete-statefulset":delete_statefulset,
+            "delete-replicaset":delete_replicaset,
+            "delete-configmap":delete_configmap,
+            "delete-secret":delete_secret,
+            #"get-namespace:",
+        }
+
+UPDATE_ACTIONS_JSON= {
+            "update-pod":update_pod,
+            "update-deployment":update_deployment,
+            "update-daemonset":update_daemonset,
+            "update-cronjob":update_cronjob,
+            "update-job":update_job,
+            # #"update-statefulset":update_statefulset,
+            "update-replicaset":update_replicaset,
+            "update-configmap":update_configmap,
+            "update-secret":update_secret,
+            # # "get-namespace:",
         }
