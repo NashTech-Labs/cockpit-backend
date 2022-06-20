@@ -12,6 +12,8 @@ import logging
 #Get an instance of a specific named logger
 logger = logging.getLogger('k8s-view')
 
+
+
 @csrf_exempt
 def get_cluster_imported_list(request):
     try:
