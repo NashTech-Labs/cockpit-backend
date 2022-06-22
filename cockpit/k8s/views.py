@@ -60,7 +60,9 @@ def get_cluster_api(request):
         "metadata":{
             "namespace":"default",
             "all_namespaces": "False",
-        }
+            "multi_namespace": ["default","n1"],
+            "multi": "True"    
+            }
     }
     response_obj
     {
@@ -95,16 +97,32 @@ def get_cluster_api(request):
             else:
                 all_namespaces=data["metadata"]["all_namespaces"]
                 namespace=data["metadata"]["namespace"]
+                multi_namespace=data["metadata"]["multi_namespace"]
+                multi= data["metadata"]["multi"]
+                list_object=[]
                 if all_namespaces == "False":
-                    k8s_objects=api_function(cluster_details,namespace=namespace,all_namespaces=False)
-                    response_data.update(
-                        {
-                            "message":"LIST KUBERNETES CLUSTER OBJECT",
-                            "status_code":0,
-                            "data":k8s_objects
-                        }
-                    )
-                    return JsonResponse(response_data)
+                    if multi == "True":
+                        for i in multi_namespace:
+                            k8s_objects=api_function(cluster_details,namespace=i,all_namespaces=False)
+                            list_object.append(k8s_objects)
+                        response_data.update(
+                                {
+                                    "message":"LIST KUBERNETES CLUSTER OBJECT",
+                                    "status_code":0,
+                                    "data":list_object
+                                }
+                            )
+                        return JsonResponse(response_data)
+                    else:
+                        k8s_objects=api_function(cluster_details,namespace=namespace,all_namespaces=False)
+                        response_data.update(
+                                {
+                                    "message":"LIST KUBERNETES CLUSTER OBJECT",
+                                    "status_code":0,
+                                    "data":k8s_objects
+                                }
+                            )
+                        return JsonResponse(response_data) 
                 else:
                     k8s_objects=api_function(cluster_details,all_namespaces=True)
                     response_data.update(
@@ -129,8 +147,6 @@ def get_cluster_api(request):
                         }
                     
         return JsonResponse(response_data)
-
-
 @csrf_exempt
 def create_cluster_api(request):
     try:
