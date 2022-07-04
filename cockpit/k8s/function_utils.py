@@ -10,6 +10,7 @@ from .deployment_utils import *
 from .replicaset_utils import *
 from .configmap_utils import *
 from .secret_utils import *
+from .node_utils import *
 
 def check_cluster_existence(cluster_name):
     cluster_data= get_cluster_details(cluster_name=cluster_name)
@@ -41,7 +42,8 @@ GET_ACTIONS=(
             "get-statefullset",
             "get-configmap",
             "get-secret",
-            "get-replicaset"
+            "get-replicaset",
+            "get-node",
             )
 
 GET_ACTIONS_JSON= {
@@ -54,6 +56,7 @@ GET_ACTIONS_JSON= {
             "get-replicaset":get_replicasets,
             "get-configmap":get_configmaps,
             "get-secret":get_secrets,
+            "get-node":get_nodes,
             # "get-namespace:",
         }
 CREATE_ACTIONS_JSON= {
