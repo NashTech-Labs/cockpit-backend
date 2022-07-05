@@ -11,6 +11,7 @@ from .replicaset_utils import *
 from .configmap_utils import *
 from .secret_utils import *
 from .namespace_utils import *
+from .svc_utils import *
 
 def check_cluster_existence(cluster_name):
     cluster_data= get_cluster_details(cluster_name=cluster_name)
@@ -43,6 +44,7 @@ GET_ACTIONS=(
             "get-configmap",
             "get-secret",
             "get-replicaset"
+            "get-service"
             )
 
 GET_ACTIONS_JSON= {
@@ -55,7 +57,8 @@ GET_ACTIONS_JSON= {
             "get-replicaset":get_replicasets,
             "get-configmap":get_configmaps,
             "get-secret":get_secrets,
-            "get-namespace": get_namespaces
+            "get-namespace": get_namespaces,
+            "get-service": get_service,
         }
 
 CREATE_ACTIONS_JSON= {
@@ -68,6 +71,7 @@ CREATE_ACTIONS_JSON= {
             "create-replicaset":create_replicaset,
             "create-configmap":create_configmap,
             "create-secret":create_secret,
+            "create-service":create_service,
             # "get-namespace:",
         }
 
@@ -81,6 +85,7 @@ DELETE_ACTIONS_JSON= {
             "delete-replicaset":delete_replicaset,
             "delete-configmap":delete_configmap,
             "delete-secret":delete_secret,
+            "delete-service":delete_service,
             #"get-namespace:",
         }
 
@@ -94,5 +99,6 @@ UPDATE_ACTIONS_JSON= {
             "update-replicaset":update_replicaset,
             "update-configmap":update_configmap,
             "update-secret":update_secret,
+            "update-service":update_service,
             # # "get-namespace:",
         }
