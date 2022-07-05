@@ -15,6 +15,17 @@ def create_kubernetes_config_entry_in_db(cluster_details):
     except Exception as e:
         print("Error creating cluster details in DB \n{}".format(e))
 
+def list_imported_cluster():
+    try:
+        data = list(KubernetesConfig.objects.all().values('id','cluster_name','version','api_server_endpoint'))
+        if len(data) != 0:
+            return {"clusters":data,"message":"SUCCESFUL"}
+        else:
+            return {"clusters":[],"message":"NO CLUSTERS FOUND"}
+    except Exception as e:
+        print("Exception--> {}".format(e))
+        return {"clusters":[], "message":"NO CLUSTERS FOUND"}
+
 def get_cluster_details(cluster_name=None):
     """returns instnace details based on cluster_ip if it exits in db 
     else return None 
