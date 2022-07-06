@@ -117,14 +117,3 @@ def delete_namespace(cluster_details,k8s_object_name=None,namespace="default"):
         print("ERROR IN create_deployment:\n{}".format(e.body))
         print("TYPE :{}".format(type(e)))
         return __format_data_for_create_namespace(e.body)
-
-TOKEN = "eyJhbGciOiJSUzI1NiIsImtpZCI6IlVWaTFFOTI4eW44WC05SlByNDVTT1pRVjVwOFVwNmZZazBib05QeW1tWkkifQ.eyJpc3MiOiJrdWJlcm5ldGVzL3NlcnZpY2VhY2NvdW50Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9uYW1lc3BhY2UiOiJkZWZhdWx0Iiwia3ViZXJuZXRlcy5pby9zZXJ2aWNlYWNjb3VudC9zZWNyZXQubmFtZSI6ImFkbWluLXNlcnZpY2UtYWNjb3VudC10b2tlbi14N2pkNyIsImt1YmVybmV0ZXMuaW8vc2VydmljZWFjY291bnQvc2VydmljZS1hY2NvdW50Lm5hbWUiOiJhZG1pbi1zZXJ2aWNlLWFjY291bnQiLCJrdWJlcm5ldGVzLmlvL3NlcnZpY2VhY2NvdW50L3NlcnZpY2UtYWNjb3VudC51aWQiOiIyNDExZDU4Ny0zNjAwLTQ4OWMtOTY1OS1iOWNjNjg2ZDlkYWEiLCJzdWIiOiJzeXN0ZW06c2VydmljZWFjY291bnQ6ZGVmYXVsdDphZG1pbi1zZXJ2aWNlLWFjY291bnQifQ.Q80HkBzjFFLG8D9ASjLxPpP6dFJ3i9V9g3JmMBpzNVRVpdb7yAtB9jaPPn_lQsVMekcHiNGqQhZaj7gETzqES3uD-TgpyQm7ubFHgLK4feRewD9E5K-S-zYHm-zQSIitlv3yk36YWPfaf4mhwC3oVMnI1LqPdwzMIMYlsoj-HzqWO_mlKC0l5ZEJGFOtmAbHJOC7vu-YVZeDoQzRmWNw1SBlqzSm8rdKHATCciPDA7MoBkA04SxP9OWWRHUmI1y5DpNRHZBKKza55wxdnGHCXvNmRDDLwhg6vD8rlZrRJO5_EfdRdi8x_60duii9KZzt0n457zk6_okmZ1Jp9jSukw"
-API = "https://192.168.49.2:8443"
-cluster = {
-    "bearer_token" : TOKEN,
-    "api_server_endpoint" : API
-}
-cm={
-    "name": "abcd"
-}
-print(create_namespace(cluster, namespace_name="test"))
