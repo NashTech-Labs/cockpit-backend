@@ -11,6 +11,8 @@ from .replicaset_utils import *
 from .configmap_utils import *
 from .secret_utils import *
 from .namespace_utils import *
+from .service_uitls import *
+from .ingress_utils import *
 
 def check_cluster_existence(cluster_name):
     cluster_data= get_cluster_details(cluster_name=cluster_name)
@@ -55,7 +57,9 @@ GET_ACTIONS_JSON= {
             "get-replicaset":get_replicasets,
             "get-configmap":get_configmaps,
             "get-secret":get_secrets,
-            "get-namespace": get_namespaces
+            "get-namespace": get_namespaces,
+            "get-service":get_services,
+            "get-ingress": get_ingress,
         }
 
 CREATE_ACTIONS_JSON= {
@@ -68,7 +72,9 @@ CREATE_ACTIONS_JSON= {
             "create-replicaset":create_replicaset,
             "create-configmap":create_configmap,
             "create-secret":create_secret,
-            # "get-namespace:",
+            "create-service": create_service,
+            "create-ingress": create_ingress,
+            # "create-namespace:",
         }
 
 DELETE_ACTIONS_JSON= {
@@ -81,7 +87,9 @@ DELETE_ACTIONS_JSON= {
             "delete-replicaset":delete_replicaset,
             "delete-configmap":delete_configmap,
             "delete-secret":delete_secret,
-            #"get-namespace:",
+            "delete-service": delete_service,
+            "delete-ingress": delete_ingress,
+            #"delete-namespace:",
         }
 
 UPDATE_ACTIONS_JSON= {
@@ -94,5 +102,7 @@ UPDATE_ACTIONS_JSON= {
             "update-replicaset":update_replicaset,
             "update-configmap":update_configmap,
             "update-secret":update_secret,
-            # # "get-namespace:",
+            "update-service": update_service,
+            "update-ingress": update_ingress,
+            #"update-namespace:",
         }
