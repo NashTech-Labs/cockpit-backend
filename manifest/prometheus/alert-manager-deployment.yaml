@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    component: "alertmanager"
+    app: prometheus
+    release: prom-stack-cockpit
+    chart: prometheus-15.10.4
+    heritage: Helm
+  name: prom-stack-cockpit-prometheus-alertmanager
+spec:
+  selector:
+    matchLabels:
+      component: "alertmanager"
+      app: prometheus
+      release: prom-stack-cockpit
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        component: "alertmanager"
+        app: prometheus
+        release: prom-stack-cockpit
+        chart: prometheus-15.10.4
+        heritage: Helm
+    spec:
+      serviceAccountName: prom-stack-cockpit-prometheus-alertmanager
+      containers:
+        - name: prometheus-alertmanager
+          image: "quay.io/prometheus/alertmanager:v0.24.0"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            {}
+          env:
+            - name: POD_IP
+              valueFrom:
+                fieldRef:
+                  apiVersion: v1
+                  fieldPath: status.podIP
+          args:
+            - --config.file=/etc/config/alertmanager.yml
+            - --storage.path=/data
+            - --cluster.listen-address=
+            - --web.external-url=http://localhost:9093
+
+          ports:
+            - containerPort: 9093
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: 9093
+            initialDelaySeconds: 30
+            timeoutSeconds: 30
+          resources:
+            {}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+            - name: storage-volume
+              mountPath: "/data"
+              subPath: ""
+        - name: prometheus-alertmanager-configmap-reload
+          image: "jimmidyson/configmap-reload:v0.5.0"
+          imagePullPolicy: "IfNotPresent"
+          securityContext:
+            {}
+          args:
+            - --volume-dir=/etc/config
+            - --webhook-url=http://127.0.0.1:9093/-/reload
+          resources:
+            {}
+          volumeMounts:
+            - name: config-volume
+              mountPath: /etc/config
+              readOnly: true
+      securityContext:
+        fsGroup: 65534
+        runAsGroup: 65534
+        runAsNonRoot: true
+        runAsUser: 65534
+      volumes:
+        - name: config-volume
+          configMap:
+            name: prom-stack-cockpit-prometheus-alertmanager
+        - name: storage-volume
+          persistentVolumeClaim:
+            claimName: prom-stack-cockpit-prometheus-alertmanager

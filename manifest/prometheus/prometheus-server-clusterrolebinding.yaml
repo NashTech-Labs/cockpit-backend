@@ -1,0 +1,17 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  labels:
+    component: "server"
+    app: prometheus
+    release: prom-stack-cockpit
+    chart: prometheus-15.10.4
+    heritage: Helm
+  name: prom-stack-cockpit-prometheus-server
+subjects:
+  - kind: ServiceAccount
+    name: prom-stack-cockpit-prometheus-server
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: prom-stack-cockpit-prometheus-server

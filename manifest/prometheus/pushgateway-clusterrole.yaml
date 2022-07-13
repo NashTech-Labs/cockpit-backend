@@ -1,0 +1,12 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  labels:
+    component: "pushgateway"
+    app: prometheus
+    release: prom-stack-cockpit
+    chart: prometheus-15.10.4
+    heritage: Helm
+  name: prom-stack-cockpit-prometheus-pushgateway
+rules:
+  []
