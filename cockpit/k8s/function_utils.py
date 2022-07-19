@@ -13,6 +13,8 @@ from .secret_utils import *
 from .namespace_utils import *
 from .service_uitls import *
 from .ingress_utils import *
+from .ingress_controller_stack import *
+from .prometheus_server_stack import *
 
 def check_cluster_existence(cluster_name):
     cluster_data= get_cluster_details(cluster_name=cluster_name)
@@ -34,18 +36,67 @@ def check_cluster_existence(cluster_name):
         }
         return data
 
-GET_ACTIONS=(   
-            "get-pod",
-            "get-namespace",
-            "get-deployment",
-            "get-daemonset",
-            "get-cronjob",
-            "get-job",
-            "get-statefullset",
-            "get-configmap",
-            "get-secret",
-            "get-replicaset"
+def enable_monitoring(cluster_details):
+    try:
+        cluster_name=cluster_details["cluster_name"]
+
+        monitoring_details={
+            'cluster_name': cluster_name,
+            'prometheus_server_url': 'None',
+            'grafana_dashboard_url' : 'None',
+            'monitoring_state': 4001,
+            'message': 'None'
+        }
+        ingress_controller_data=deploy_ingress_controller_stack(cluster_details)
+
+        if ingress_controller_data["code"] == 4002:
+
+            monitoring_details.update(
+                monitoring_state=4002,
+                message=PLATFORM_STATE[4002]
+                )
+            update_monitoring_details(monitoring_details)
+            prometheus_server_data=deploy_prometheus_server_stack(cluster_details)
+
+            if prometheus_server_data["code"] == 4006:
+                monitoring_details.update(
+                    monitoring_state=4006,
+                    message=PLATFORM_STATE[4006]
+                    )
+                update_monitoring_details(monitoring_details)
+            else:
+                monitoring_details.update(
+                    monitoring_state=4006,
+                    message=PLATFORM_STATE[4006],
+                    prometheus_server_url=prometheus_server_data['prometheus_server_endpoint']
+                )
+                update_monitoring_details(monitoring_details)
+
+        else:
+            monitoring_details.update(
+                monitoring_state=4007,
+                message=PLATFORM_STATE[4003],
+                prometheus_server_url='None'
             )
+            update_monitoring_details(monitoring_details)
+
+        
+    except Exception as e:
+        print("Error in Enable Monitoring \n {}".format(e))
+
+
+# GET_ACTIONS=(   
+#             "get-pod",
+#             "get-namespace",
+#             "get-deployment",
+#             "get-daemonset",
+#             "get-cronjob",
+#             "get-job",
+#             "get-statefullset",
+#             "get-configmap",
+#             "get-secret",
+#             "get-replicaset"
+#             )
 
 GET_ACTIONS_JSON= {
             "get-pod":get_pods,

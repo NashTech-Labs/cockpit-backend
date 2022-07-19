@@ -17,3 +17,4 @@ roleRef:
 subjects:
 - kind: ServiceAccount
   name: prom-stack-cockpit-kube-state-metrics
+  namespace: default

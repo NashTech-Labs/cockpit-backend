@@ -29,6 +29,6 @@ webhooks:
       - v1
     clientConfig:
       service:
-        namespace: "default"
+        namespace: default
         name: nginx-ingress-cockpit-ingress-nginx-controller-admission
         path: /networking/v1/ingresses

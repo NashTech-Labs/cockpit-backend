@@ -16,3 +16,4 @@ roleRef:
 subjects:
   - kind: ServiceAccount
     name: nginx-ingress-cockpit-ingress-nginx
+    namespace: default

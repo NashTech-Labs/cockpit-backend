@@ -11,6 +11,7 @@ metadata:
 subjects:
   - kind: ServiceAccount
     name: prom-stack-cockpit-prometheus-pushgateway
+    namespace: default
 roleRef:
   apiGroup: rbac.authorization.k8s.io
   kind: ClusterRole
