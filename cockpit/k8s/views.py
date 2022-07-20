@@ -44,6 +44,7 @@ def cluster_monitoring(request):
             if monitoring_data['monitoring_state'] != 4000:
                 _temp_request_obj.update(
                     grafana_dashboard_url='{}'.format(monitoring_data['grafana_dashboard_url']),
+                    prometheus_server_url='{}'.format(monitoring_data['prometheus_server_url']),
                     status_code=monitoring_data['monitoring_state'],
                     message=monitoring_data['message']
                 )

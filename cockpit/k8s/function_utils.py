@@ -56,7 +56,8 @@ def check_for_monitoring_status(cluster_name):
             'message':'{}'.format(PLATFORM_STATE[monitoring_state]),
             'monitoring_state':'{}'.format(monitoring_state),
             'cluster_name': '{}'.format(cluster_name),
-            'grafana_dashboard_url':'{}'.format(monitoring_data["grafana_dashboard_url"])            
+            'prometheus_server_url': "{}".format(monitoring_data["prometheus_server_url"]),
+            'grafana_dashboard_url':'{}'.format(monitoring_data["grafana_dashboard_url"])     
         }
         return data
 
@@ -84,10 +85,11 @@ def enable_monitoring(cluster_details):
             update_monitoring_details(monitoring_details)
             prometheus_server_data=deploy_prometheus_server_stack(cluster_details)
 
-            if prometheus_server_data["code"] == 4006:
+            if prometheus_server_data["code"] == 4005:
                 monitoring_details.update(
-                    monitoring_state=4006,
-                    message=PLATFORM_STATE[4006]
+                    monitoring_state=4005,
+                    message=PLATFORM_STATE[4005],
+                    prometheus_server_url=prometheus_server_data['prometheus_server_endpoint']
                     )
                 update_monitoring_details(monitoring_details)
             else:
