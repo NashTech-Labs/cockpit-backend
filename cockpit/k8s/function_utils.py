@@ -15,6 +15,7 @@ from .service_uitls import *
 from .ingress_utils import *
 from .ingress_controller_stack import *
 from .prometheus_server_stack import *
+from cockpit.celery import app 
 
 def check_cluster_existence(cluster_name):
     cluster_data= get_cluster_details(cluster_name=cluster_name)
@@ -36,6 +37,31 @@ def check_cluster_existence(cluster_name):
         }
         return data
 
+def check_for_monitoring_status(cluster_name):
+    monitoring_data=get_monitoring_details(cluster_name=cluster_name)
+    if len(monitoring_data) == 0 :
+        print("Monitoring Request Does not Exists")
+        data={
+            "message": "{}".format(PLATFORM_STATE[4000]),
+            "monitoring_state":4000,
+            "cluster_name":"{}".format(cluster_name),
+            "prometheus_server_url":'None',
+            "grafana_dashboard_url":"None"
+        }
+        return data
+    else:
+        monitoring_state=monitoring_data["monitoring_state"]
+        print("Monitoring Request Exists, State: {}".format(PLATFORM_STATE[monitoring_state]))
+        data={
+            'message':'{}'.format(PLATFORM_STATE[monitoring_state]),
+            'monitoring_state':'{}'.format(monitoring_state),
+            'cluster_name': '{}'.format(cluster_name),
+            'grafana_dashboard_url':'{}'.format(monitoring_data["grafana_dashboard_url"])            
+        }
+        return data
+
+
+@app.task(time_limit=600,queue='default')
 def enable_monitoring(cluster_details):
     try:
         cluster_name=cluster_details["cluster_name"]

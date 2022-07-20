@@ -120,18 +120,25 @@ def deploy_prometheus_server_stack(cluster_details,manifest_path="{}/prometheus"
         ingress=("ingress.yaml")
         ingress_file_path="{}/{}".format(manifest_path,ingress)
 
-        time.sleep(60)
+        time.sleep(30)
 
         with open(ingress_file_path) as f:
             yaml_file = yaml.safe_load(f)
             ingress_client_api.create_namespaced_ingress(body=yaml_file,namespace="default")
 
         
-        name='cockpit-prometheus'
-        client_output=ingress_client_api.read_namespaced_ingress(name, namespace)
+        name='nginx-ingress-cockpit-ingress-nginx-controller'
+        service_client_api=client.CoreV1Api()
+        client_output=service_client_api.read_namespaced_service(name, namespace)
+
         json_data=ApiClient().sanitize_for_serialization(client_output)
-        print("INGRESS RESPONE:{}".format(json_data['status']))
-        PROMETHEUS_ENDPOINT= json_data['status']['loadBalancer']['ingress'][0]['ip']
+        print("SERIVCE RESPONE:{}".format(json_data['status']))
+
+        if cluster_details['cloud'].lower() == 'aws':
+            PROMETHEUS_ENDPOINT= json_data['status']['loadBalancer']['ingress'][0]['hostname']
+        elif cluster_details['cloud'].lower() == 'gcp':
+            PROMETHEUS_ENDPOINT= json_data['status']['loadBalancer']['ingress'][0]['ip']
+        
         data={
             'message': 'Successfully',
             'code': 4005,

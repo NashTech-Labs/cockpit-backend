@@ -8,7 +8,7 @@ class KubernetesConfig(models.Model):
     api_server_endpoint = models.TextField(blank=True,null=True,default='None')
     kubeconfig = models.TextField(blank=True,null=True,default='None')
     cloud= models.CharField(max_length=255,blank=True,default="None")
-    monitoring_state=models.CharField(max_length=255,blank=True,default="false")
+    enable_monitoring=models.CharField(max_length=255,blank=True,default="false")
 
     class Meta:
         db_table = "kubernetes_config"
@@ -21,7 +21,7 @@ class MonitoringConfig(models.Model):
     cluster_name= models.CharField(max_length=255,blank=True,default="None")
     prometheus_server_url=models.TextField(blank=True,null=True,default='None')
     grafana_dashboard_url=models.TextField(blank=True,null=True,default='None')
-    monitoring_state=models.IntegerField(blank=True)
+    monitoring_state=models.IntegerField(blank=True,default=4000)
     message = models.TextField(blank=True,null=True,default='None')
 
 
