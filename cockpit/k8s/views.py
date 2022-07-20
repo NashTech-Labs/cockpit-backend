@@ -59,7 +59,8 @@ def cluster_monitoring(request):
                 _temp_request_obj.update(
                     grafana_dashboard_url='{}'.format(monitoring_data['grafana_dashboard_url']),
                     status_code=monitoring_data['monitoring_state'],
-                    message=monitoring_data['message']
+                    message=monitoring_data['message'],
+                    prometheus_server_url='{}'.format(monitoring_data['prometheus_server_url'])
                 )
                 return JsonResponse(_temp_request_obj)
         else:
@@ -68,6 +69,7 @@ def cluster_monitoring(request):
                 "enable_monitoring": "false",
                 "namespace": "None",
                 "grafana_dashboard_url":'None',
+                "prometheus_server_url":"None",
                 "status_code": 1,
                 "message":'INVALID HTTP REQUEST METHOD'
              }
