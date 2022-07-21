@@ -38,7 +38,7 @@ def create_prometheus_datasource(prometheus_endpoint,datasource_name):
         }
         grafana_client=_get_grafana_client()
         response=grafana_client.datasource.create_datasource(data_source)
-        return response
+        return response['datasource']
     except Exception as e:
         print("Error creating datasources :{}".format(e))
         response={
