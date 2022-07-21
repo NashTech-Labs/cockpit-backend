@@ -23,6 +23,9 @@ class MonitoringConfig(models.Model):
     grafana_dashboard_url=models.TextField(blank=True,null=True,default='None')
     monitoring_state=models.IntegerField(blank=True,default=4000)
     message = models.TextField(blank=True,null=True,default='None')
+    grafana_prometheus_datasource_name=models.CharField(max_length=255,blank=True,default="None")
+    grafana_prometheus_datasource_uid=models.CharField(max_length=255,blank=True,default="None")
+    gra
 
 
     class Meta:

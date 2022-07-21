@@ -1,5 +1,5 @@
 from .serializers import *
-import json
+import json,uuid
 from platforms.platform_state import *
 from .pod_utils import *
 from .cronjob_utils import *
@@ -16,6 +16,7 @@ from .ingress_utils import *
 from .ingress_controller_stack import *
 from .prometheus_server_stack import *
 from cockpit.celery import app 
+from .grafana_dashboard_utils import *
 
 def check_cluster_existence(cluster_name):
     cluster_data= get_cluster_details(cluster_name=cluster_name)
@@ -92,6 +93,28 @@ def enable_monitoring(cluster_details):
                     prometheus_server_url=prometheus_server_data['prometheus_server_endpoint']
                     )
                 update_monitoring_details(monitoring_details)
+                prometheus_datasource_name='prometheus-{0}-{1}'.format(cluster_name,uuid.uuid4().hex[:8].lower())
+                datasource_response=create_prometheus_datasource(
+                    prometheus_server_data['prometheus_server_endpoint'],
+                    prometheus_datasource_name
+                    )
+                if datasource_response['uid'] != "None":
+                    monitoring_details.update(
+                        monitoring_state=4008,
+                        message=PLATFORM_STATE[4008],
+                        grafana_prometheus_datasource_name=prometheus_datasource_name,
+                        grafana_prometheus_datasource_uid=datasource_response['uid']
+                        
+                    )
+                    update_monitoring_details(monitoring_details)
+                else:
+                    monitoring_details.update(
+                        monitoring_state=4009,
+                        message=PLATFORM_STATE[4009],
+                        grafana_prometheus_datasource_name=prometheus_datasource_name,
+                        grafana_prometheus_datasource_uid=datasource_response['uid']
+                    )
+                    update_monitoring_details(monitoring_details)
             else:
                 monitoring_details.update(
                     monitoring_state=4006,
