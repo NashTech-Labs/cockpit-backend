@@ -62,7 +62,8 @@ def create_monitoring_config_entry_in_db(monitoring_details):
         MonitoringConfig.objects.create(            
             cluster_name=monitoring_details["cluster_name"],
             prometheus_server_url=monitoring_details["prometheus_server_url"],
-            grafana_dashboard_url=monitoring_details["grafana_dashboard_url"],
+            grafana_k8s_apiserver_dashboard_url=monitoring_details["grafana_k8s_apiserver_dashboard_url"],
+            grafana_k8s_container_dashboard_url=monitoring_details["grafana_k8s_container_dashboard_url"],
             monitoring_state=monitoring_details["monitoring_state"],
             message =monitoring_details["message"]
             )
@@ -79,7 +80,8 @@ def get_monitoring_details(cluster_name=None):
             fields=(
                 "prometheus_server_url",
                 "cluster_name",
-                "grafana_dashboard_url",
+                "grafana_k8s_apiserver_dashboard_url",
+                "grafana_k8s_container_dashboard_url",
                 "monitoring_state",
                 "message"
                 )

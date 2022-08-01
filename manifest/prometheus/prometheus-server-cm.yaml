@@ -29,6 +29,9 @@ data:
       static_configs:
       - targets:
         - localhost:9090
+    - job_name: 'kube-state-metrics'
+      static_configs:
+      - targets: ['prom-stack-cockpit-kube-state-metrics.default.svc.cluster.local:8080']    
     - bearer_token_file: /var/run/secrets/kubernetes.io/serviceaccount/token
       job_name: kubernetes-apiservers
       kubernetes_sd_configs:

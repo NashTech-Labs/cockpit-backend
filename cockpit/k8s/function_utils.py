@@ -47,7 +47,9 @@ def check_for_monitoring_status(cluster_name):
             "monitoring_state":4000,
             "cluster_name":"{}".format(cluster_name),
             "prometheus_server_url":'None',
-            "grafana_dashboard_url":"None"
+            "grafana_k8s_apiserver_dashboard_url":"None",
+            "grafana_k8s_container_dashboard_url":"None",
+
         }
         return data
     else:
@@ -58,7 +60,9 @@ def check_for_monitoring_status(cluster_name):
             'monitoring_state':'{}'.format(monitoring_state),
             'cluster_name': '{}'.format(cluster_name),
             'prometheus_server_url': "{}".format(monitoring_data["prometheus_server_url"]),
-            'grafana_dashboard_url':'{}'.format(monitoring_data["grafana_dashboard_url"])     
+            "grafana_k8s_apiserver_dashboard_url":"{}".format(monitoring_data["grafana_k8s_apiserver_dashboard_url"]),
+            "grafana_k8s_container_dashboard_url":"{}".format(monitoring_data["grafana_k8s_container_dashboard_url"]),
+                
         }
         return data
 
@@ -71,7 +75,6 @@ def enable_monitoring(cluster_details):
         monitoring_details={
             'cluster_name': cluster_name,
             'prometheus_server_url': 'None',
-            'grafana_dashboard_url' : 'None',
             'monitoring_state': 4001,
             'message': 'None'
         }
@@ -107,6 +110,20 @@ def enable_monitoring(cluster_details):
                         
                     )
                     update_monitoring_details(monitoring_details)
+                    dashboard_info=generated_dashboard_url(prometheus_datasource=prometheus_datasource_name)
+                    if dashboard_info['monitoring_state'] == 4010:
+                        monitoring_details.update(dashboard_info)
+                        monitoring_details.update(
+                            monitoring_state=4010,
+                            message=PLATFORM_STATE[4010]
+                        )
+                        update_monitoring_details(monitoring_details)
+                    else:
+                        monitoring_details.update(
+                            monitoring_state=4011,
+                            message=PLATFORM_STATE[4011]
+                        )
+                        update_monitoring_details(monitoring_details)
                 else:
                     monitoring_details.update(
                         monitoring_state=4009,

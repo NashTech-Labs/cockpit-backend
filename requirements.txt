@@ -12,3 +12,4 @@ kubernetes==23.6.0
 kombu==5.2.4
 django-cors-headers==3.13.0
 grafana-api==1.0.3
+grafanalib==0.6.3

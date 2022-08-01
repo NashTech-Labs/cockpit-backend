@@ -28,7 +28,8 @@ def cluster_monitoring(request):
         "cluster_name":"demo1",
         "enable_monitoring": "true",
         "namespace": "default",
-        "grafana_dashboard_url":'',
+        "grafana_k8s_container_dashboard_url":'',
+        "grafana_k8s_apiserver_dashboard_url":"",
         "status_code":'',
         "message":''
     }
@@ -43,7 +44,8 @@ def cluster_monitoring(request):
 
             if monitoring_data['monitoring_state'] != 4000:
                 _temp_request_obj.update(
-                    grafana_dashboard_url='{}'.format(monitoring_data['grafana_dashboard_url']),
+                    grafana_k8s_apiserver_dashboard_url='{}'.format(monitoring_data['grafana_k8s_apiserver_dashboard_url']),
+                    grafana_k8s_container_dashboard_url='{}'.format(monitoring_data['grafana_k8s_container_dashboard_url']),
                     prometheus_server_url='{}'.format(monitoring_data['prometheus_server_url']),
                     status_code=monitoring_data['monitoring_state'],
                     message=monitoring_data['message']
@@ -57,7 +59,8 @@ def cluster_monitoring(request):
                 enable_monitoring.delay(cluster_details)
 
                 _temp_request_obj.update(
-                    grafana_dashboard_url='{}'.format(monitoring_data['grafana_dashboard_url']),
+                    grafana_k8s_apiserver_dashboard_url='{}'.format(monitoring_data['grafana_k8s_apiserver_dashboard_url']),
+                    grafana_k8s_container_dashboard_url='{}'.format(monitoring_data['grafana_k8s_container_dashboard_url']),
                     status_code=monitoring_data['monitoring_state'],
                     message=monitoring_data['message'],
                     prometheus_server_url='{}'.format(monitoring_data['prometheus_server_url'])
@@ -68,7 +71,8 @@ def cluster_monitoring(request):
                 "cluster_name":"None",
                 "enable_monitoring": "false",
                 "namespace": "None",
-                "grafana_dashboard_url":'None',
+                "grafana_k8s_apiserver_dashboard_url":'None',
+                "grafana_k8s_container_dashboard_url":"None",
                 "prometheus_server_url":"None",
                 "status_code": 1,
                 "message":'INVALID HTTP REQUEST METHOD'
@@ -81,7 +85,8 @@ def cluster_monitoring(request):
                 "cluster_name":"{}".format(data["cluster_name"]),
                 "enable_monitoring": "false",
                 "namespace": "{}".format(data["namespace"]),
-                "grafana_dashboard_url":'None',
+                "grafana_k8s_apiserver_dashboard_url":'None',
+                "grafana_k8s_container_dashboard_url":"None",
                 "status_code":4007,
                 "message":'EXCEPTION IN ENABLE MONITORING'
              }

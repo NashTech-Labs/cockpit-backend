@@ -20,11 +20,17 @@ class KubernetesConfig(models.Model):
 class MonitoringConfig(models.Model):
     cluster_name= models.CharField(max_length=255,blank=True,default="None")
     prometheus_server_url=models.TextField(blank=True,null=True,default='None')
-    grafana_dashboard_url=models.TextField(blank=True,null=True,default='None')
+    grafana_k8s_apiserver_dashboard_url=models.TextField(blank=True,null=True,default='None')
+    grafana_k8s_apiserver_dashboard_uid=models.TextField(blank=True,null=True,default='None')
+    grafana_k8s_apiserver_dashboard_id=models.TextField(blank=True,null=True,default='None')
+    grafana_k8s_container_dashboard_url=models.TextField(blank=True,null=True,default='None')
+    grafana_k8s_container_dashboard_uid=models.TextField(blank=True,null=True,default='None')
+    grafana_k8s_container_dashboard_id=models.TextField(blank=True,null=True,default='None')
     monitoring_state=models.IntegerField(blank=True,default=4000)
     message = models.TextField(blank=True,null=True,default='None')
     grafana_prometheus_datasource_name=models.CharField(max_length=255,blank=True,default="None")
     grafana_prometheus_datasource_uid=models.CharField(max_length=255,blank=True,default="None")
+
 
 
 
