@@ -37,7 +37,7 @@ def list_workflows(cluster_details,namespace):
             api_server_endpoint=cluster_details["api_server_endpoint"],
         )
         api_response = client_api.list_workflows(namespace=namespace)
-        print(data)
+        print(api_response)
 
     except argo_workflows.ApiException as e:
             print("Exception when calling WorkflowServiceApi->list_workflows: %s\n" % e)
