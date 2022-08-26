@@ -13,6 +13,87 @@ import logging
 logger = logging.getLogger('k8s-view')
 
 @csrf_exempt
+def cluster_monitoring(request):
+    """
+    request payload 
+
+    {
+        "cluster_name":"demo1",
+        "enable_monitoring": "true",
+        "namespace": "default"
+    }
+
+    response
+    {
+        "cluster_name":"demo1",
+        "enable_monitoring": "true",
+        "namespace": "default",
+        "grafana_k8s_container_dashboard_url":'',
+        "grafana_k8s_apiserver_dashboard_url":"",
+        "status_code":'',
+        "message":''
+    }
+    """
+    try:
+        if request.method == 'POST':
+            data =json.loads(request.body.decode("utf-8"))
+            _temp_request_obj ={}
+            _temp_request_obj.update(data)
+            cluster_name=data["cluster_name"]
+            monitoring_data=check_for_monitoring_status(cluster_name)
+
+            if monitoring_data['monitoring_state'] != 4000:
+                _temp_request_obj.update(
+                    grafana_k8s_apiserver_dashboard_url='{}'.format(monitoring_data['grafana_k8s_apiserver_dashboard_url']),
+                    grafana_k8s_container_dashboard_url='{}'.format(monitoring_data['grafana_k8s_container_dashboard_url']),
+                    prometheus_server_url='{}'.format(monitoring_data['prometheus_server_url']),
+                    status_code=monitoring_data['monitoring_state'],
+                    message=monitoring_data['message']
+                )
+                return JsonResponse(_temp_request_obj)
+            else:
+                create_monitoring_config_entry_in_db(monitoring_data)
+
+                cluster_details = get_cluster_details(cluster_name=cluster_name)
+                namespace='default'
+                enable_monitoring.delay(cluster_details)
+
+                _temp_request_obj.update(
+                    grafana_k8s_apiserver_dashboard_url='{}'.format(monitoring_data['grafana_k8s_apiserver_dashboard_url']),
+                    grafana_k8s_container_dashboard_url='{}'.format(monitoring_data['grafana_k8s_container_dashboard_url']),
+                    status_code=monitoring_data['monitoring_state'],
+                    message=monitoring_data['message'],
+                    prometheus_server_url='{}'.format(monitoring_data['prometheus_server_url'])
+                )
+                return JsonResponse(_temp_request_obj)
+        else:
+            response_data=   {
+                "cluster_name":"None",
+                "enable_monitoring": "false",
+                "namespace": "None",
+                "grafana_k8s_apiserver_dashboard_url":'None',
+                "grafana_k8s_container_dashboard_url":"None",
+                "prometheus_server_url":"None",
+                "status_code": 1,
+                "message":'INVALID HTTP REQUEST METHOD'
+             }
+            return JsonResponse(response_data)
+    except Exception as e:
+        logger.exception("ERROR IN GET Ccluster_monitoring:\n{}".format(e))
+        data =json.loads(request.body.decode("utf-8"))
+        response_data=   {
+                "cluster_name":"{}".format(data["cluster_name"]),
+                "enable_monitoring": "false",
+                "namespace": "{}".format(data["namespace"]),
+                "grafana_k8s_apiserver_dashboard_url":'None',
+                "grafana_k8s_container_dashboard_url":"None",
+                "status_code":4007,
+                "message":'EXCEPTION IN ENABLE MONITORING'
+             }
+        return JsonResponse(response_data)
+
+
+@csrf_exempt
 def get_cluster_imported_list(request):
     try:
         if request.method == 'GET':

@@ -8,7 +8,6 @@ metadata:
     chart: prometheus-15.10.4
     heritage: Helm
   name: prom-stack-cockpit-prometheus-alertmanager
-  namespace: default
 spec:
   accessModes:
     - ReadWriteOnce
