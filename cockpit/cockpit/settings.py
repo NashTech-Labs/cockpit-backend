@@ -43,7 +43,8 @@ INSTALLED_APPS = [
     'guacamole.apps.GuacamoleConfig',
     'platforms.apps.PlatformsConfig',
     'user.apps.UserConfig',
-    'k8s.apps.K8SConfig'
+    'k8s.apps.K8SConfig',
+    'argocd.apps.ArgocdConfig'
 ]
 
 MIDDLEWARE = [
