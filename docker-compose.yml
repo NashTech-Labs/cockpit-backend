@@ -21,6 +21,7 @@ volumes:
   record:
     driver: local
 
+
 # services
 services:
   # guacd
@@ -191,6 +192,3 @@ services:
       - 'rabbitmq_data:/bitnami/rabbitmq/mnesia'
     networks:
       - cockpit
-
-
-
