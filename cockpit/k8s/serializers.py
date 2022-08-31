@@ -104,3 +104,19 @@ def update_monitoring_details(monitoring_details):
             MonitoringConfig.objects.filter(cluster_name=monitoring_details["cluster_name"]).update(**monitoring_details)
     except Exception as e:
         print("Error updating instance details \n{}".format(e))
+
+def list_monitoring_cluster():
+    try:
+        data = list(MonitoringConfig.objects.all().values('id','cluster_name',
+                                                                'prometheus_server_url',
+                                                                'grafana_k8s_apiserver_dashboard_url',
+                                                                'grafana_k8s_container_dashboard_url',
+                                                                'message'
+                                                                ))
+        if len(data) != 0:
+            return {"clusters":data,"message":"SUCCESFUL"}
+        else:
+            return {"clusters":[],"message":"NO CLUSTERS FOUND"}
+    except Exception as e:
+        print("Exception--> {}".format(e))
+        return {"clusters":[], "message":"NO CLUSTERS FOUND"}

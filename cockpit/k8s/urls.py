@@ -11,5 +11,6 @@ urlpatterns = [
     path('update-cluster-api/', views.update_cluster_api, name='update-cluster-api'),
     path('list-clusters/', views.get_cluster_imported_list, name='list-clusters'),
     path('cluster-monitoring/',views.cluster_monitoring, name='cluster-monitoring'),
+    path('list-monitoring-clusters/', views.get_cluster_monitoring_list, name='list-monitoring-clusters')
     
 ]

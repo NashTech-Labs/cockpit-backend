@@ -106,6 +106,18 @@ def get_cluster_imported_list(request):
         return JsonResponse({"clusters":[],"message":"EXCEPTION IN LIST CLUSTERS"})
 
 @csrf_exempt
+def get_cluster_monitoring_list(request):
+    try:
+        if request.method == 'GET':
+            data=list_monitoring_cluster()
+            return JsonResponse(data)
+        else:
+            return JsonResponse({"clusters":[],"message":"INVALID REQUEST METHOD"})
+    except Exception as e:
+        logger.exception("ERROR IN GET CLUSTER MONITORING LIST:\n{}".format(e))
+        return JsonResponse({"clusters":[],"message":"EXCEPTION IN LIST CLUSTERS"})
+
+@csrf_exempt
 def import_cluster(request):
     """
     {

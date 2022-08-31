@@ -30,6 +30,7 @@ class MonitoringConfig(models.Model):
     message = models.TextField(blank=True,null=True,default='None')
     grafana_prometheus_datasource_name=models.CharField(max_length=255,blank=True,default="None")
     grafana_prometheus_datasource_uid=models.CharField(max_length=255,blank=True,default="None")
+    enable_monitoring=models.CharField(max_length=255,blank=True,default="True")
 
 
 
