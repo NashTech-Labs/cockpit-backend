@@ -142,6 +142,8 @@ services:
       python manage.py migrate user
       python manage.py makemigrations k8s
       python manage.py migrate k8s
+      python manage.py makemigrations argocd
+      python manage.py migrate argocd
       python manage.py runserver 0.0.0.0:8000
     env_file:
      .envCockpit
