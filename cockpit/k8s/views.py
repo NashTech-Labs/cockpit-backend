@@ -482,3 +482,78 @@ def update_cluster_api(request):
                         }
                     
         return JsonResponse(response_data) 
+
+
+def get_k8s_object_sepcific_details(request):
+    """
+    request_obj
+    {
+        "cluster_name":"one_piece",
+        "resource_name":"some-pod",
+        "namespace": "default",
+        "resource_kind": "Pod"
+        "user_name": "monkey_d_luffy"
+    }
+    response_obj
+    {
+        "cluster_name":"one_piece",
+        "resource_name":"some-pod",
+        "namespace": "default",
+        "resource_kind": "Pod",
+        "events": [],
+        "live_manifest": {},
+        "logs": [{"contanier_1":""},{container_2:""}]
+    }
+    """
+    try:
+        if request.method == 'POST':
+            data =json.loads(request.body.decode("utf-8"))
+            _temp_request_obj ={}
+            _temp_request_obj.update(data)
+            cluster_name=data["cluster_name"]        
+            api_function=GET_K8S_OBJECT_SPECIFIC_DETAILS[data["resource_kind"]]
+            cluster_details=get_cluster_details(cluster_name=cluster_name)
+            response_data={
+                "cluster_name":"{}".format(cluster_name),
+                "resource_name":"{}".format(data["resource_name"]),
+                "resource_kind": "{}".format(data["resource_kind"]),
+                "namespace":"{}".format(data["namespace"])
+            }
+            if len(cluster_details) == 0:
+                response_data.update(
+                    {
+                        "message":"{}".format(PLATFORM_STATE[3404]),
+                        "status_code":3404,
+                        "logs":[],
+                        "events":[],
+                        "live_manifest":[]
+                    }
+                )
+                return JsonResponse(response_data)
+            else:
+                namespace=data["namespace"]
+                k8s_objects_details=api_function(cluster_details,namespace=namespace,k8_object_name=data["resource_name"])
+                response_data.update(k8s_objects_details)
+                response_data.update(
+                    {
+                        "message":"LIST KUBERNETES CLUSTER OBJECT",
+                        "status_code":0,
+                    }
+                )
+                return JsonResponse(response_data)
+        else:
+            return JsonResponse({"message":"invalid request {}".format(request.method)})
+    except Exception as e:
+        logger.exception("Error in get cluster_api \n{}".format(e))
+        data =json.loads(request.body.decode("utf-8"))
+        response_data={
+                            "message":"EXCEPTION IN GET KUBERNETES CLUSTER OBJECTS",
+                            "status_code":1,
+                            "cluster_name":"{}".format(data["cluster_name"]),
+                            "logs":[],
+                            "events":[],
+                            "live_manifest":[]
+                            
+                        }
+                    
+        return JsonResponse(response_data)

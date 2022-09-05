@@ -11,6 +11,6 @@ urlpatterns = [
     path('update-cluster-api/', views.update_cluster_api, name='update-cluster-api'),
     path('list-clusters/', views.get_cluster_imported_list, name='list-clusters'),
     path('cluster-monitoring/',views.cluster_monitoring, name='cluster-monitoring'),
+    path('get-k8s-object-sepcific-details/',views.get_k8s_object_sepcific_details,name='get-k8s-object-sepcific-details'),
     path('list-monitoring-clusters/', views.get_cluster_monitoring_list, name='list-monitoring-clusters')
-    
 ]

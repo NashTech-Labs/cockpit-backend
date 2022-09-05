@@ -166,6 +166,10 @@ def enable_monitoring(cluster_details):
 #             "get-replicaset"
 #             )
 
+GET_K8S_OBJECT_SPECIFIC_DETAILS={
+    "Pod":get_specific_pod_details
+}
+
 GET_ACTIONS_JSON= {
             "get-pod":get_pods,
             "get-deployment":get_deployments,

@@ -123,3 +123,80 @@ def delete_pod(cluster_details,k8s_object_name=None,namespace="default"):
         print("ERROR IN create_deployment:\n{}".format(e.body))
         print("TYPE :{}".format(type(e)))
         return __format_data_for_create_pod(e.body)
+
+
+def _get_pod_logs(pod_name=None, namespace=None,client_api=None,container=None):
+    try:
+        api_response = client_api.read_namespaced_pod_log(name=pod_name, namespace=namespace,container=container)
+        # print('#############################')
+        # print(api_response)
+        # print('#############################')
+        # print("Data type:{}".format(type(api_response)))
+        data={container:api_response}
+
+        return data
+    except ApiException as e:
+        print('Found exception in reading the logs {}'.format(e.body))
+        return {container:""}
+    
+
+def _get_pod_events(pod_name=None, namespace=None,client_api=None):
+    pass
+
+def get_specific_pod_details(cluster_details,namespace="default",k8_object_name=None):
+
+    """
+    {
+    "resource_name":"some-pod",
+    "namespace": "default",
+    "resource_kind": "Pod",
+    "events": " Some Events",
+    "live_manifest": {},
+    "logs": [{'container:'logs''}]
+    }
+    """
+
+    try:
+        response_data={
+            'resource_name': '{}'.format(k8_object_name),
+            'namespace': '{}'.format(namespace),
+            "resource_kind": "Pod",
+            'events':[],
+            'live_manifest': {}
+        }
+
+        logs=[]
+        events=[]
+        client_api= __get_kubernetes_corev1client(
+            bearer_token=cluster_details["bearer_token"],
+            api_server_endpoint=cluster_details["api_server_endpoint"],
+        )
+        pod_list = client_api.list_namespaced_pod(namespace)
+        pod_data={}
+        data=__format_data_for_pod(pod_list)
+        for pod in data:
+            if pod['pod'] == k8_object_name:
+                pod_data=pod
+                break
+        print("POD DATA:{}".format(pod_data))
+        for container in pod_data['containers']:
+            container_name=container['name']
+            log = _get_pod_logs(pod_name=k8_object_name,namespace=namespace,client_api=client_api,container=container_name)
+            logs.append(log)
+        response_data.update({'logs':logs})
+
+        # events=_get_pod_events(pod_name=pod_name,namespace=namespace,client_api=client_api)
+        
+        #print("Pods under namespaces {}: {}".format(namespace,data))
+        return response_data
+    except ApiException as e:
+        print("ERROR IN getting pod specific details:\n{}".format(e.body))
+        response_data={
+            'resource_name': '{}'.format(k8_object_name),
+            'namespace': '{}'.format(namespace),
+            "resource_kind": "Pod",
+            'events':[],
+            'logs':[],
+            'live_manifest': {}
+        }
+        return response_data  
