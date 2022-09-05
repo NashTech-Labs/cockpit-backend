@@ -27,7 +27,8 @@ def __format_data_for_pod(client_output):
                 temp_dict={
                     "pod": pod["metadata"]["name"],
                     "namespace": pod["metadata"]["namespace"],
-                    "status": pod["status"]["phase"]
+                    "status": pod["status"]["phase"],
+                    "containers": pod["spec"]["containers"]
                 }
                 temp_list.append(temp_dict)
         return temp_list
