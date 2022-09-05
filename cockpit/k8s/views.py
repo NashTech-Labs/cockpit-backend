@@ -483,7 +483,7 @@ def update_cluster_api(request):
                     
         return JsonResponse(response_data) 
 
-
+@csrf_exempt
 def get_k8s_object_sepcific_details(request):
     """
     request_obj
