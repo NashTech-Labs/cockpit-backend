@@ -11,16 +11,17 @@ from argo_workflows.model.io_argoproj_workflow_v1alpha1_workflow_submit_request 
 from argo_workflows.model.io_argoproj_workflow_v1alpha1_workflow import IoArgoprojWorkflowV1alpha1Workflow
 from argo_workflows.model.io_argoproj_workflow_v1alpha1_workflow_resubmit_request import IoArgoprojWorkflowV1alpha1WorkflowResubmitRequest
 
-def __get_argocd_client(bearer_token,api_server_endpoint):
+
+def get_argocd_client(bearer_token,api_server_endpoint):
     try:
         configuration = argo_workflows.Configuration()
         configuration.host = api_server_endpoint
         configuration.api_key = {"authorization": "Bearer " + bearer_token}
         configuration.verify_ssl = False
         api_client = argo_workflows.ApiClient(configuration)
-        
+
         with argo_workflows.ApiClient(configuration) as api_client:
-    # Create an instance of the API class
+# Create an instance of the API class
             api_instance = workflow_service_api.WorkflowServiceApi(api_client)
         return api_instance
 
@@ -32,7 +33,7 @@ def __get_argocd_client(bearer_token,api_server_endpoint):
 def list_workflows(cluster_details,namespace):
 
     try:
-        client_api= __get_argocd_client(
+        client_api= get_argocd_client(
             bearer_token=cluster_details["bearer_token"],
             api_server_endpoint=cluster_details["api_server_endpoint"],
         )
@@ -44,11 +45,11 @@ def list_workflows(cluster_details,namespace):
 
 
 def create_workflow(cluster_details,namespace):
-    resp =  requests.get('https://raw.githubusercontent.com/yamikarajput546/argocd-update//master/hello-world.yaml')
+    resp =  requests.get('https://raw.githubusercontent.com/muzakkirsaifi123/argocd_demo/main/hello.yml')
     manifest = yaml.safe_load(resp.text)
- 
+
     try:
-        client_api= __get_argocd_client(
+        client_api= get_argocd_client(
             bearer_token=cluster_details["bearer_token"],
             api_server_endpoint=cluster_details["api_server_endpoint"],
         )
@@ -62,10 +63,10 @@ def create_workflow(cluster_details,namespace):
 
 def update_workflow(cluster_details,namespace,name):
 
-    resp =  requests.get('https://raw.githubusercontent.com/yamikarajput546/argocd-update//master/hello-world.yaml')
+    resp =  requests.get('https://raw.githubusercontent.com/muzakkirsaifi123/argocd_demo/main/hello.yml')
     manifest = yaml.safe_load(resp.text)
     try:
-        client_api= __get_argocd_client(
+        client_api= get_argocd_client(
             bearer_token=cluster_details["bearer_token"],
             api_server_endpoint=cluster_details["api_server_endpoint"],
         )
@@ -82,7 +83,7 @@ def update_workflow(cluster_details,namespace,name):
 def delete_workflow(cluster_details,namespace,name):
 
     try:
-        client_api= __get_argocd_client(
+        client_api= get_argocd_client(
             bearer_token=cluster_details["bearer_token"],
             api_server_endpoint=cluster_details["api_server_endpoint"],
         )
@@ -95,11 +96,11 @@ def delete_workflow(cluster_details,namespace,name):
 
 if __name__ == '__main__':
     cluster_details={
-        "bearer_token":"None",
+        "bearer_token":input("Enter the token:- "), # Token can be "None" for now. 
         "api_server_endpoint":"https://127.0.0.1:2746"
     }
-    # create_workflow(cluster_details,"argo")
-    list_workflows(cluster_details, "argo")
-    # update_workflow(cluster_details, "argo", "hello-yami-j9gf6")
-    # delete_workflow(cluster_details, "argo", "hello-yami-resubmitt8vcv")
-
+# create_workflow(cluster_details,"argo")
+# sleep(200)
+# list_workflows(cluster_details, "argo")
+# update_workflow(cluster_details, "argo", "hello-muzakkir-nbtqv")
+delete_workflow(cluster_details, "argo", "hello-muzakkir-nbtqv")
