@@ -1,0 +1,20 @@
+FROM python:latest
+
+RUN curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin v0.18.3
+
+
+RUN mkdir /vulnerability_scan
+
+WORKDIR /vulnerability_scan/
+
+COPY vulnsn-requirements.txt vulnsn-requirements.txt
+
+RUN pip install -r vulnsn-requirements.txt
+
+COPY ./vulnerability_scan/ ./
+
+
+ENV "TRIVY_PATH"="/usr/local/bin/trivy"
+
+EXPOSE 8000
+CMD ["python", "manage.py", "runserver", "0.0.0.0:8000"]

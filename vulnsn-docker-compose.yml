@@ -1,0 +1,91 @@
+version: '2.0'
+
+# networks
+# create a network 'cockpit' in mode 'bridged'
+networks:
+  vulnsn:
+    driver: bridge
+volumes:
+  rabbitmq_data:
+    driver: local
+  init_gpg:
+    driver: local
+  data_gcg:
+    driver: local
+  init_cpg:
+    driver: local
+  data_cpg:
+    driver: local
+  drive:
+    driver: local
+  record:
+    driver: local
+
+
+# services
+services:
+  #vulnsn vulnsn pg
+  vulnsn_pg:
+    container_name: vulnsn_pg
+    environment:
+      PGDATA: /var/lib/postgresql/data/guacamole
+      POSTGRES_DB: vulnsn_db
+      POSTGRES_PASSWORD: 'e8bfc3e6d12443830116b721'
+      POSTGRES_USER: vulnsn_user
+    image: postgres:13.4
+    networks:
+      - vulnsn
+    ports:
+    - 2543:5432/tcp
+    restart: on-failure
+    volumes:
+    - 'init_cpg:/docker-entrypoint-initdb.d:ro'
+    - 'data_cpg:/var/lib/postgresql/data:rw'   
+ 
+  #vulnsn_app
+  vulnsnapp: &vulnsapp
+    build:
+      context: ./
+      dockerfile: vulnsn-Dockerfile
+    ports:
+      - "8001:8000"
+    container_name: cockpitapp
+    command: 
+    - /bin/bash
+    - -c
+    - |
+      sleep 5
+      python manage.py makemigrations trivy
+      python manage.py migrate trivy 
+      python manage.py runserver 0.0.0.0:8000
+    env_file:
+     .envVulns
+    depends_on:
+      - vulnsn_pg
+    networks:
+      - vulnsn
+  vulnsn_celery_worker:
+    <<: *vulnsnapp
+    command: celery -A vulnerabiltiy_scan --loglevel=info --autoscale 4,2
+    restart: on-failure
+    image: vulnsn_celery_worker
+    container_name: vulnsn_celery_worker    
+    networks:
+        - vulnsn
+    ports: []
+    depends_on:
+      - rabbitmq     
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - '5369:4369'
+      - '4551:5551'
+      - '4552:5552'
+      - '4672:5672'
+      - '35672:25672'
+      - '45672:15672'
+    volumes:
+      - 'rabbitmq_data:/bitnami/rabbitmq/mnesia'
+    networks:
+      - vulnsn
