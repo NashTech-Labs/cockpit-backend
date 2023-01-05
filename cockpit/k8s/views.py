@@ -208,6 +208,7 @@ def get_cluster_api(request):
                             "message":"LIST KUBERNETES CLUSTER OBJECT",
                             "status_code":0,
                             "data":k8s_objects
+                            
                         }
                     )
                     return JsonResponse(response_data)
