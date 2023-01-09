@@ -43,13 +43,13 @@ services:
     - 'data_cpg:/var/lib/postgresql/data:rw'   
  
   #vulnsn_app
-  vulnsnapp: &vulnsapp
+  vulnsnapp: &vulnsnapp
     build:
       context: ./
       dockerfile: vulnsn-Dockerfile
     ports:
       - "8001:8000"
-    container_name: cockpitapp
+    container_name: vulnsnapp
     command: 
     - /bin/bash
     - -c
@@ -59,14 +59,14 @@ services:
       python manage.py migrate trivy 
       python manage.py runserver 0.0.0.0:8000
     env_file:
-     .envVulns
+     .envVulnsn
     depends_on:
       - vulnsn_pg
     networks:
       - vulnsn
   vulnsn_celery_worker:
     <<: *vulnsnapp
-    command: celery -A vulnerabiltiy_scan --loglevel=info --autoscale 4,2
+    command: celery -A vulnerabiltiy_scan worker --loglevel=info --autoscale 4,2
     restart: on-failure
     image: vulnsn_celery_worker
     container_name: vulnsn_celery_worker    
