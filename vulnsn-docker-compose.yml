@@ -66,7 +66,7 @@ services:
       - vulnsn
   vulnsn_celery_worker:
     <<: *vulnsnapp
-    command: celery -A vulnerabiltiy_scan worker --loglevel=info --autoscale 4,2
+    command: celery -A vulnerability_scan worker --loglevel=info --autoscale 4,2
     restart: on-failure
     image: vulnsn_celery_worker
     container_name: vulnsn_celery_worker    
