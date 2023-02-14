@@ -1,0 +1,71 @@
+<p>Kubernetes / Cluster</p>
+<div class="page-wrapper">
+  <div class="container-fluid position-relative">
+    <div class="row d-flex justify-content-center">
+      <div class="card position-relative mt-1 bg-gradient-dark col-lg-12">
+        <ul class="d-flex justify-content-center">
+          <li class="mt-3 mx-5">
+            <span>Import Existing Cluster</span>
+            <button class="btn btn-info mt-3 mx-4" (click)="openModal(addModal)"><span>Import</span></button>
+          </li>
+          <li class="mt-3 mx-5">
+            <span>Create A New Cluster</span>
+            <button class="btn btn-info mt-3 mx-4"><span>Create</span></button>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+<ng-template #addModal>
+  <div class="modal-header bg-gradient-dark px-5">
+    <h5 class="modal-title pull-left ms-2 ">Import Existing Cluster</h5>
+  </div>
+  <div class="modal-body px-5">
+    <app-existing-cluster
+      (isFormValid)="onFormValid($event)"
+      (submitSuccess)="onSubmitSuccess($event)"></app-existing-cluster>
+  </div>
+  <div class="modal-footer bg-gradient-dark justify-content-center d-flex">
+    <button type="submit" class="btn btn-primary text-white mx-2"
+            (click)="submitForm(); openModal(resModal)" [disabled]="!formValid">
+      Import
+    </button>
+    <button class="btn btn-secondary text-white mx-2" (click)="cancelForm()">
+      Cancel
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #resModal>
+  <div class="modal-header bg-gradient-dark px-5">
+    <h5 class="modal-title pull-left ms-2 ">Result</h5>
+  </div>
+  <div class="modal-body px-5">
+    <pre>{{res}}</pre>
+  </div>
+  <div class="modal-footer bg-gradient-dark justify-content-center d-flex">
+    <button class="btn btn-secondary text-white mx-2" style="width: fit-content" (click)="cancelForm()">
+      OK
+    </button>
+  </div>
+</ng-template>
+
+<div class="row my-5">
+  <div class="col-12">
+    <div class="card p-4">
+      <div class="card-header p-0 position-relative mt-n5 mb-4 head">
+        <div
+          class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 px-4 table_header_section"
+        >
+          <h6 class="text-white text-capitalize ">
+            List Of Imported Cluster
+          </h6>
+        </div>
+      </div>
+      <app-imported-cluster
+        [tableHeading]="tableHeading"
+      ></app-imported-cluster>
+    </div>
+  </div>
+</div>

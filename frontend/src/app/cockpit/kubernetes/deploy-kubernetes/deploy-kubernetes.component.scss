@@ -1,0 +1,101 @@
+.card {
+  font-family: sans-serif;
+}
+
+@media only screen and (max-width: 576px) {
+  .card {
+    padding: 5%;
+  }
+}
+
+.text-grey {
+  color: #6c7293;
+}
+
+.errorMessage {
+  font-size: 13px;
+  color: red;
+  font-family: sans-serif;
+}
+
+.hintMessage {
+  font-size: 13px;
+  color: lightgray;
+  font-family: sans-serif;
+}
+.input-label{
+  color: #fff !important;
+}
+textarea{
+  height: 100px;
+}
+
+//Editor CSS Configuration
+::ng-deep .ql-container {
+  resize: vertical;
+  overflow-y: hidden;
+}
+::ng-deep .ql-editor.ql-blank::before{
+  color: #fff;
+  opacity: 0.6;
+}
+::ng-deep .ql-picker-options{
+  background-color: #202940 !important;
+}
+::ng-deep .ql-picker-item{
+  color: #fff;
+}
+::ng-deep .ql-editor p{
+  color: #fff;
+}
+::ng-deep .ql-toolbar.ql-snow{
+  border: 1px solid #7b809a;
+}
+::ng-deep .ql-container.ql-snow{
+  border: 1px solid #7b809a;
+}
+.form-control:disabled{
+  background-color: transparent;
+  height: 42px;
+}
+
+.form-select:disabled {
+  background-color: transparent;
+}
+
+.filterDiv {
+  width: 92%;
+  border-radius: 5px;
+  border: 1px solid white;
+}
+
+select {
+  background: url(../../../../assets/icon/menu-buttons/dropdownArrow.png) no-repeat
+  right/16px;
+  background-position: right 14px top 15px;
+  padding: 10px;
+  width: 100%;
+  vertical-align: middle;
+  //background-color: #202940;
+  color: white;
+  //height: 55px;
+  border: 1px solid grey;
+}
+
+select:-webkit-autofill select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+select:focus {
+  background-color: #202940;
+  color: white;
+}
+
+.your-custom-container .ngx-dialog-body {
+  padding: 20px 0 10px 0;
+  text-align: left;
+  max-height: 80vh;
+  overflow-x: hidden;
+}

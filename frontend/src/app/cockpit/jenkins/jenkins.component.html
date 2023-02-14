@@ -1,0 +1,165 @@
+<div class="col-lg-1">
+    <button class="btn btn-info reset" (click)="onConnectInstance()"><span>Guacamole</span></button>
+</div>
+<div id="display" >
+
+</div>
+<!--<div class="page-wrapper">-->
+<!--    <div class="container-fluid position-relative">-->
+<!--        <div class="row d-flex justify-content-center">-->
+<!--            <div class="card position-relative mt-5 bg-gradient-dark col-lg-8">-->
+<!--                <div class="card-header p-0 position-relative mt-n4 mx-3 ">-->
+<!--                    <div class="bg-gradient-primary shadow-primary border-radius-lg py-2 pe-1 text-center py-4 ">-->
+<!--                        <h5 class="font-weight-bolder text-white mt-1">PROJECT DETAILS</h5>-->
+<!--                    </div>-->
+<!--                    <form [formGroup]="createForm" class="d-flex justify-content-center pt-3">-->
+<!--                        <div class="col-9">-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-12">-->
+<!--                                    <label class="mb-2 input-label">Git Url</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="git_url"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Git Branch</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="git_branch"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Git Token</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="git_token"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Docker Repo Name</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="docker_reponame"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Docker Tag</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="docker_tag"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+
+<!--                            <div class="row">-->
+<!--                                <div class="col-12">-->
+<!--                                    <label class="mb-2 input-label">Docker Registry Url</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="docker_registry_url"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Docker Username</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="docker_username"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Docker Password</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="docker_password"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Docker File Path</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="docker_file_path"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Docker Build Context</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="docker_build_context"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-12">-->
+<!--                                    <label class="mb-2 input-label">Language</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="language"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="row">-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Version</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="version"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                                <div class="col-6">-->
+<!--                                    <label class="mb-2 input-label">Framework</label>-->
+<!--                                    <input-->
+<!--                                            type="text"-->
+<!--                                            formControlName="framework"-->
+<!--                                            class="form-control border border-secondary p-2 text-white"-->
+<!--                                            placeholder=""-->
+<!--                                    />-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                            <div class="text-center my-2">-->
+<!--                                <button type="submit" class="btn btn-primary mt-4 "-->
+<!--                                        [disabled]="!isFormValid" (click)="saveRequestData()">Submit</button>-->
+<!--                            </div>-->
+<!--                            <br>-->
+<!--                        </div>-->
+<!--                    </form>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->

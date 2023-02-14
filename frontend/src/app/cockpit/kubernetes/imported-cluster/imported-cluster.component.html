@@ -1,0 +1,97 @@
+<div class="table-block">
+  <div class="table-block-content">
+    <div class="table-responsive">
+      <div class="d-none d-sm-block">
+        <ngx-datatable
+          (activate)="onActivate($event)"
+          [columnMode]="'force'"
+          [footerHeight]="50"
+          [headerHeight]="$any('auto')"
+          [limit]="20"
+          [rows]="tableRows"
+          [rowHeight]="$any('auto')"
+          [scrollbarH]="false"
+          [externalSorting]="true"
+          class="material"
+        >
+          <ngx-datatable-column
+            [sortable]="false"
+            cellClass="table-cell-style"
+            headerClass="table-header-style"
+            name="CLUSTER NAME"
+            prop="cluster_name"
+          >
+            <ng-template
+              let-row="row"
+              let-value="value"
+              ngx-datatable-cell-template
+            >
+              {{ value }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            cellClass="pl-4 table-cell-style"
+            headerClass="table-header-style"
+            name="VERSION"
+            prop="version"
+          >
+            <ng-template let-value="value" ngx-datatable-cell-template>
+              {{ value }}
+            </ng-template>
+          </ngx-datatable-column>
+
+          <ngx-datatable-column
+            cellClass="pl-4 table-cell-style"
+            headerClass="table-header-style"
+            name="API ENDPOINT"
+            prop="api_server_endpoint"
+          >
+            <ng-template let-value="value" ngx-datatable-cell-template>
+              {{ value }}
+            </ng-template>
+          </ngx-datatable-column>
+
+        </ngx-datatable>
+      </div>
+
+      <!--      <div-->
+      <!--        *ngFor="let row of tableRows"-->
+      <!--        (click)="onActivate({ type: 'click', row: row })"-->
+      <!--        class="mobile-table-row d-block d-sm-none col-xl-3 col-sm-6 mb-xl-0 mb-4"-->
+      <!--      >-->
+      <!--        <div-->
+      <!--          class="col-12 text-white font-weight-bolder pb-1 px-0 mb-1 row-title border-bottom border-secondary"-->
+      <!--        >-->
+      <!--          <img-->
+      <!--            *ngIf="row.topRanker"-->
+      <!--            alt="trophy-image"-->
+      <!--            class="image-mobile"-->
+      <!--            src="../../../../assets/icon/knoldus-logo/icons-trophy.png"-->
+      <!--          />-->
+      <!--          {{ row.knolderName }}-->
+      <!--        </div>-->
+      <!--        <div class="mr-auto d-flex flex-column">-->
+      <!--          <span class="text-white heading">{{'Table.Studio' | translate}}</span>-->
+      <!--          <span class="score-details"> {{'Table.Rank' | translate}}: {{ row.studioName }} </span>-->
+      <!--        </div>-->
+      <!--        <div class="mr-auto d-flex flex-column">-->
+      <!--          <span class="text-white heading">{{'Table.Monthly' | translate}}</span>-->
+      <!--          <span class="score-details"> {{'Table.Rank' | translate}}: {{ row.monthlyRank }} </span>-->
+      <!--          <span class="score-details"> {{'Table.Score' | translate}}: {{ row.monthlyScore }} </span>-->
+      <!--        </div>-->
+      <!--        <div class="mx-auto d-flex flex-column">-->
+      <!--          <span class="text-white heading">{{'Table.Overall' | translate}}</span>-->
+      <!--          <span class="score-details"> {{'Table.Rank' | translate}}: {{ row.allTimeRank }} </span>-->
+      <!--          <span class="score-details"> {{'Table.Score' | translate}}: {{ row.allTimeScore }} </span>-->
+      <!--        </div>-->
+      <!--        <div class="ml-auto d-flex flex-column">-->
+      <!--          <span class="text-white heading">{{'Table.3MonthStreak' | translate}}</span>-->
+      <!--          <span class="score-details">-->
+      <!--            {{ row.quarterlyStreak }}-->
+      <!--          </span>-->
+      <!--        </div>-->
+      <!--      </div>-->
+    </div>
+  </div>
+</div>

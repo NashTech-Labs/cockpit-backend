@@ -1,0 +1,123 @@
+<p>Kubernetes / {{title}}
+    <span class="ms-5 me-3"><a class="tabs text-white" (click)="refresh()">
+    <i class="material-icons opacity-10">refresh</i> Refresh</a></span>
+    <span class="mx-3"><a class="tabs text-white"
+                          (click)="action(); openModal(addModal)">
+        <i class="material-icons opacity-10">add</i> Deploy </a></span>
+    <span class="mx-3"><a class="tabs text-white"
+                          (click)="action(); openModal(updateModal)">
+        <i class="material-icons opacity-10">edit</i> Update</a></span>
+    <span class="mx-3"><a class="tabs text-white"
+                          (click)="action(); openModal(deleteModal)">
+        <i class="material-icons opacity-10">delete</i> Delete</a></span>
+
+</p>
+<hr class="horizontal light mt-1 mb-2"/>
+<form>
+    <div class="page-wrapper row">
+        <div class="col-lg-3">
+            <div class="filterDiv" id="cluster">
+                <label>Cluster</label>
+                <select class="form-control" (change)="selectCluster($event)">
+                    <option value="Cluster" selected>Select Cluster</option>
+                    <option *ngFor="let cluster of clusters">{{cluster.cluster_name}}
+                    </option>
+                </select>
+            </div>
+        </div>
+
+        <div class="col-lg-3">
+            <div class="filterDiv" id="namespace">
+                <label>Namespace</label>
+                <select class="form-control" (change)="selectNamespace($event)">
+                    <option value="Namespace" selected>Select Namespace</option>
+                    <option *ngFor="let namespace of namespaces">{{namespace.namespace}}
+                </select>
+            </div>
+        </div>
+        <div class="col-lg-1">
+            <button class="btn btn-info reset" (click)="reloadCurrentRoute()"><span>RESET</span></button>
+        </div>
+    </div>
+</form>
+<hr>
+
+<router-outlet (activate)="onActivate($event)"></router-outlet>
+
+<ng-template #addModal>
+    <div class="modal-header bg-gradient-dark px-5">
+        <h5 class="modal-title pull-left ms-2 ">Deploy {{title}}</h5>
+    </div>
+    <div class="modal-body px-5">
+        <app-deploy-kubernetes
+                [title]="title"
+                [createAction] = createAction
+                (isFormValid)="onFormValid($event)"></app-deploy-kubernetes>
+    </div>
+    <div class="modal-footer bg-gradient-dark justify-content-center d-flex">
+        <button type="submit" class="btn btn-primary text-white mx-2" style="width: fit-content"
+                (click)="submitForm(); openModal(resModal)" [disabled]="!formValid">Create
+        </button>
+        <button class="btn btn-secondary text-white mx-2" style="width: fit-content" (click)="cancelForm()">
+            Cancel
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #resModal>
+    <div class="modal-header bg-gradient-dark px-5">
+        <h5 class="modal-title pull-left ms-2 ">Result</h5>
+    </div>
+    <div class="modal-body px-5">
+        <pre>{{res}}</pre>
+    </div>
+    <div class="modal-footer bg-gradient-dark justify-content-center d-flex">
+        <button class="btn btn-secondary text-white mx-2" style="width: fit-content" (click)="cancelForm()">
+            OK
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #updateModal>
+    <div class="modal-header bg-gradient-dark px-5">
+        <h5 class="modal-title pull-left ms-2 ">Update {{title}}</h5>
+    </div>
+    <div class="modal-body px-5">
+        <app-update-kubernetes
+                [getAction] = getAction
+                [updateAction] = updateAction
+                (isFormValid)="onFormValid($event)">
+        </app-update-kubernetes>
+    </div>
+    <div class="modal-footer bg-gradient-dark justify-content-center d-flex">
+        <button type="submit" class="btn btn-primary text-white mx-2" style="width: fit-content"
+                (click)="submitForm(); openModal(resModal)" [disabled]="!formValid">Update
+        </button>
+        <button class="btn btn-secondary text-white mx-2" style="width: fit-content" (click)="cancelForm()">
+            Cancel
+        </button>
+    </div>
+</ng-template>
+
+<ng-template #deleteModal>
+    <div class="modal-header bg-gradient-dark px-5">
+        <h5 class="modal-title pull-left ms-2 ">Delete {{title}}</h5>
+    </div>
+    <div class="modal-body px-5">
+        <app-delete-kubernetes
+                [getAction] = getAction
+                [deleteAction] = deleteAction
+                (isFormValid)="onFormValid($event)">
+        </app-delete-kubernetes>
+    </div>
+    <div class="modal-footer bg-gradient-dark justify-content-center d-flex">
+        <button type="submit" class="btn btn-primary text-white mx-2" style="width: fit-content"
+                (click)="submitForm(); openModal(resModal)" [disabled]="!formValid">
+            Delete
+        </button>
+        <button class="btn btn-secondary text-white mx-2" style="width: fit-content" (click)="cancelForm()">
+            Cancel
+        </button>
+    </div>
+</ng-template>
+

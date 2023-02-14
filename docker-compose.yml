@@ -192,3 +192,21 @@ services:
       - 'rabbitmq_data:/bitnami/rabbitmq/mnesia'
     networks:
       - cockpit
+
+# FRONTEND
+  frontend: 
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    container_name: frontend
+    networks:
+      - cockpit   
+    depends_on:
+      - guacamole_pg
+      - platform_pg
+      - guacamole
+      - liquibase
+      - cockpitapp  
+    

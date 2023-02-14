@@ -1,0 +1,159 @@
+<section class="g-sidenav-show bg-gray-200 dark-version" [ngClass]="{'g-sidenav-pinned': toggleSideNav }">
+  <aside
+          class="sidenav navbar navbar-vertical navbar-expand-xs border-0 border-radius-xl my-3 fixed-start ms-3 bg-gradient-dark"
+          id="sidenav-main">
+    <div class="sidenav-header">
+      <i class="material-icons p-3 cursor-pointer text-white opacity-5 position-absolute end-0 top-0 d-xl-none"
+         aria-hidden="true" id="iconSidenav" (click)="toggleSideBar()">close</i>
+      <a class="navbar-brand m-0">
+        <!--        <img src="../assets/icon/knoldus-logo/Go1-1.png" class="navbar-brand-img h-100" alt="Go1P_logo" />-->
+        <span class="ms-1 font-weight-bold text-white">Cockpit Logo</span>
+      </a>
+    </div>
+    <hr class="horizontal light mt-0 mb-2"/>
+    <div class="collapse navbar-collapse w-auto max-height-vh-100" id="sidenav-collapse-main">
+      <ul class="navbar-nav">
+        <ng-container *ngFor="let item of navItems">
+          <li class="nav-item">
+            <ng-container [ngSwitch]="childrens.length > 0">
+              <ng-template [ngSwitchCase]="true">
+                <div data-bs-toggle="collapse" class="nav-link ps-0 text-white collapsed"
+                     role="button" (click)="item.collapsed = !item.collapsed" [attr.aria-expanded]="item.collapsed">
+                  <h6 class="ms-3 my-2 text-uppercase text-xs text-white font-weight-bolder opacity-8 ">
+                    {{item.title}}
+                  </h6>
+                </div>
+                <div class="collapse" [ngClass]="{'show' : !item.collapsed}">
+                  <ul class="nav">
+                    <ng-container *ngFor="let subMenu of item.childerens">
+                      <li class="nav-item">
+                        <ng-container >
+                          <ng-template [ngSwitchCase]="true">
+                            <div data-bs-toggle="collapse" class="nav-link ps-0 text-white collapsed bg-gradient-info"
+                                 role="button" (click)="subMenu.collapsed = !subMenu.collapsed"
+                                 [attr.aria-expanded]="subMenu.collapsed">
+                              <h6 class="ms-3 my-2 text-uppercase text-xs text-white font-weight-bolder opacity-8 ">
+                                {{subMenu.title}}
+                              </h6>
+                            </div>
+                            <div class="collapse" [ngClass]="{'show' : !subMenu.collapsed}">
+                              <ul class="nav">
+                                <li class="nav-item" *ngFor="let subChildMenu of subMenu.childerens">
+                                  <ng-container>
+                                    <ng-template [ngSwitchCase]="true">
+                                      <a class="nav-link text-white"
+                                         [ngClass]="{'active bg-gradient-info': isActiveRoute(subChildMenu.link)}"
+                                         [routerLink]="[subChildMenu.link]">
+                                        <i class="material-icons opacity-10">{{subChildMenu.imageUrl}}</i>
+                                        <span class="sidenav-normal ms-2 ps-1">
+                                      {{subChildMenu.title}}
+                                    </span>
+                                      </a>
+                                    </ng-template>
+                                  </ng-container>
+                                </li>
+                              </ul>
+                            </div>
+                          </ng-template>
+
+                          <ng-template [ngSwitchCase]="false">
+                            <a class="nav-link text-white"
+                               [ngClass]="{'active bg-gradient-info': isActiveRoute(subMenu.link)}"
+                               [routerLink]="[subMenu.link]">
+                              <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                                <i class="material-icons opacity-10">{{subMenu.imageUrl}}</i>
+                              </div>
+                              <span class="nav-link-text ms-1">{{subMenu.title}}</span>
+                            </a>
+                          </ng-template>
+                        </ng-container>
+
+                      </li>
+                    </ng-container>
+                  </ul>
+                </div>
+              </ng-template>
+
+              <ng-template [ngSwitchCase]="false">
+                <a class="nav-link text-white" [ngClass]="{'active bg-gradient-info': isActiveRoute(item.link)}"
+                   [routerLink]="[item.link]">
+                  <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">
+                    <i class="material-icons opacity-10">{{item.imageUrl}}</i>
+                  </div>
+                  <span class="nav-link-text ms-1">{{item.title}}</span>
+                </a>
+              </ng-template>
+            </ng-container>
+          </li>
+        </ng-container>
+
+
+        <!--        <ng-container *ngFor="let item of navItems">-->
+        <!--          <li class="nav-item">-->
+        <!--            <ng-container [ngSwitch]="childrens.length >0">-->
+        <!--              <ng-template [ngSwitchCase]="true">-->
+        <!--                <div data-bs-toggle="collapse" class="nav-link ps-0 text-white collapsed"-->
+        <!--                     role="button" (click)="item.collapsed = !item.collapsed" [attr.aria-expanded]= "item.collapsed">-->
+        <!--                  <h6 class="ms-3 my-2 text-uppercase text-xs text-white font-weight-bolder opacity-8 ">-->
+        <!--                    {{item.title}}-->
+        <!--                  </h6>-->
+        <!--                </div>-->
+        <!--                <div class="collapse" [ngClass]="{'show' : !item.collapsed}">-->
+        <!--                  <ul class="nav">-->
+        <!--                    <li class="nav-item" *ngFor="let subMenu of childrens">-->
+        <!--                      <ng-container>-->
+        <!--                        <ng-template [ngSwitchCase]="true">-->
+        <!--                          <a class="nav-link text-white"-->
+        <!--                             [ngClass]="{'active bg-gradient-info': isActiveRoute(subMenu.link)}"-->
+        <!--                             [routerLink]="[subMenu.link]">-->
+        <!--                            <i class="material-icons opacity-10">{{subMenu.imageUrl}}</i>-->
+        <!--                            <span class="sidenav-normal ms-2 ps-1">-->
+        <!--                              {{subMenu.title}}-->
+        <!--                            </span>-->
+        <!--                          </a>-->
+        <!--                        </ng-template>-->
+        <!--                      </ng-container>-->
+        <!--                    </li>-->
+        <!--                  </ul>-->
+        <!--                </div>-->
+        <!--              </ng-template>-->
+        <!--              <ng-template [ngSwitchCase]="false">-->
+        <!--                <a class="nav-link text-white" [ngClass]="{'active bg-gradient-info': isActiveRoute(item.link)}"-->
+        <!--                   [routerLink]="[item.link]">-->
+        <!--                  <div class="text-white text-center me-2 d-flex align-items-center justify-content-center">-->
+        <!--                    <i class="material-icons opacity-10">{{item.imageUrl}}</i>-->
+        <!--                  </div>-->
+        <!--                  <span class="nav-link-text ms-1">{{item.title}}</span>-->
+        <!--                </a>-->
+        <!--              </ng-template>-->
+        <!--            </ng-container>-->
+        <!--          </li>-->
+        <!--        </ng-container>-->
+      </ul>
+    </div>
+  </aside>
+  <main class="main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <nav class="navbar navbar-main navbar-expand-lg px-0 mx-4 shadow-none border-radius-xl" id="navbarBlur"
+         navbar-scroll="true">
+      <div class="container-fluid py-1 px-3">
+        <nav aria-label="breadcrumb">
+        </nav>
+        <div class="collapse navbar-collapse mt-sm-0 mt-2 me-md-0 me-sm-4 justify-content-end" id="navbar">
+          <div class="ms-md-auto pe-md-3 d-flex">
+<!--            <a type="button" href="http://localhost:8080/realms/Cockpit/protocol/openid-connect/logout?client_id=cockpit-ui&post_logout_redirect_uri=http://localhost:4200">Logout</a>-->
+<!--            <button class="btn btn-primary" (click)="logout()">Logout</button>-->
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container-fluid py-4">
+      <div class="row">
+        <div class="col-12">
+          <router-outlet></router-outlet>
+        </div>
+      </div>
+    </div>
+  </main>
+</section>
+
+<!--?id_token_hint={{this.token}}&post_logout_redirect_uri=http://localhost:4200-->

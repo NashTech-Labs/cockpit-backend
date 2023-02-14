@@ -1,0 +1,270 @@
+<div *ngIf="userloggedIn">
+    <p>Kubernetes / Monitoring</p>
+    <hr>
+
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="card p-4">
+                <p>Only Admin can Access</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div *ngIf="adminLoggedin">
+    <p>Kubernetes / Monitoring
+        <span class="ms-5 me-3"><a class="tabs text-white" (click)="reloadCurrentRoute()">
+    <i class="material-icons opacity-10">refresh</i> Refresh</a></span>
+    </p>
+    <hr>
+
+    <div *ngIf="loading" class="d-flex justify-content-center">
+        <div class="spinner-border" role="status">
+            <span class="sr-only" ></span>
+        </div>
+    </div>
+    <div class="row my-5">
+        <div class="col-12">
+            <div class="card p-4">
+                <div class="card-header p-0 position-relative mt-n5 mb-4 head">
+                    <div
+                            class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 px-4 table_header_section"
+                    >
+                        <h6 class="text-white text-capitalize ">
+                            Imported Cluster
+                        </h6>
+                    </div>
+                </div>
+                <div class="table-block">
+                    <div class="table-block-content">
+                        <div class="table-responsive">
+                            <div class="d-none d-sm-block">
+                                <ngx-datatable
+                                        [columnMode]="'force'"
+                                        [footerHeight]="50"
+                                        [headerHeight]="$any('auto')"
+                                        [limit]="20"
+                                        [rows]="rows"
+                                        [rowHeight]="$any('auto')"
+                                        [scrollbarH]="false"
+                                        [externalSorting]="true"
+                                        class="material"
+                                >
+                                    <ngx-datatable-column
+                                            [sortable]="false"
+                                            cellClass="table-cell-style"
+                                            headerClass="table-header-style"
+                                            name="CLUSTER NAME"
+                                            prop="cluster_name"
+                                    >
+                                        <ng-template
+                                            let-row="row"
+                                            let-value="value"
+                                            ngx-datatable-cell-template
+                                        >
+                                            {{ value }}
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column
+                                            cellClass="pl-4 table-cell-style"
+                                            headerClass="table-header-style"
+                                            name="ENABLE MONITORING"
+                                            prop="enable_status"
+                                    >
+                                        <ng-template let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                            <div>
+                                                <span *ngIf="value=='Click Here'" class="badge completed w-auto" [id]="rowIndex" (click)="enableClick(rowIndex)">{{value}}</span>
+                                                <span *ngIf="value=='Retry'" class="badge failed w-auto" (click)="enableClick(rowIndex)" >{{value}}</span>
+                                                <span *ngIf="value=='Enabled'" class="badge completed w-auto" >{{value}}</span>
+                                            </div>
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column
+                                            cellClass="pl-4 table-cell-style"
+                                            headerClass="table-header-style"
+                                            name="STACK STATUS"
+                                            prop="stack_status"
+                                    >
+                                        <ng-template let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                            <div>
+                                                <span *ngIf="value=='Not available'" class="badge failed w-auto">{{value}}</span>
+                                                <span *ngIf="value=='Deployment Failed'" class="badge failed w-auto" >{{value}}</span>
+                                                <span *ngIf="value=='Prometheus Url'"class="badge completed w-auto" (click)="goToPrometheusStack(rowIndex)">{{value}}</span>
+                                            </div>
+                                        </ng-template>
+                                    </ngx-datatable-column>
+
+                                    <ngx-datatable-column
+                                            cellClass="pl-4 table-cell-style"
+                                            headerClass="table-header-style"
+                                            name="API SERVER DASHBOARD"
+                                            prop="apiserver_dashboard_status"
+                                    >
+                                        <ng-template let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                            <div >
+                                                <span *ngIf="value=='Not available'" class="badge failed w-auto">{{value}}</span>
+                                                <span *ngIf="value=='Deployment Failed'" class="badge failed w-auto" >{{value}}</span>
+                                                <span *ngIf="value=='Dashboard Url'" class="badge completed w-auto" (click)="goToApiServerDashboard(rowIndex)">{{value}}</span>
+                                            </div>
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                    <ngx-datatable-column
+                                            cellClass="pl-4 table-cell-style"
+                                            headerClass="table-header-style"
+                                            name="CONTAINER DASHBOARD"
+                                            prop="container_dashboard_status"
+                                    >
+                                        <ng-template let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>
+                                            <div>
+                                                <span  *ngIf="value=='Not available'" class="badge failed w-auto">{{value}}</span>
+                                                <span  *ngIf="value=='Deployment Failed'"class="badge failed w-auto" >{{value}}</span>
+                                                <span  *ngIf="value=='Dashboard Url'"class="badge completed w-auto" (click)="goToContainerDashboard(rowIndex)">{{value}}</span>
+                                            </div>
+
+                                        </ng-template>
+                                    </ngx-datatable-column>
+                                </ngx-datatable>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!--First-->
+<!--<form >-->
+<!--    <div class="page-wrapper row">-->
+<!--        <div class="col-lg-3">-->
+<!--            <div class="filterDiv" id="cluster">-->
+<!--                <label>Cluster</label>-->
+<!--                <select class="form-control" (change)="selectCluster($event)">-->
+<!--                    <option value="Cluster" selected>Select Cluster</option>-->
+<!--                    <option *ngFor="let cluster of clusters">{{cluster.cluster_name}}-->
+<!--                    </option>-->
+<!--                </select>-->
+<!--            </div>-->
+<!--        </div>-->
+
+<!--        <div class="col-lg-1">-->
+<!--            <button class="btn btn-info reset" [disabled]="disabled" (click)="enableClick()" ><span>Enable</span></button>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</form>-->
+
+<!--<div class="row my-5">-->
+<!--    <div class="col-12">-->
+<!--        <div class="card p-4">-->
+<!--            <div class="card-header p-0 position-relative mt-n5 mb-4 head">-->
+<!--                <div-->
+<!--                        class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 px-4 table_header_section"-->
+<!--                >-->
+<!--                    <h6 class="text-white text-capitalize ">-->
+<!--                        Imported Cluster-->
+<!--                    </h6>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="table-block">-->
+<!--                <div class="table-block-content">-->
+<!--                    <div class="table-responsive">-->
+<!--                        <div class="d-none d-sm-block">-->
+<!--                            <ngx-datatable-->
+<!--                                    [columnMode]="'force'"-->
+<!--                                    [footerHeight]="50"-->
+<!--                                    [headerHeight]="$any('auto')"-->
+<!--                                    [limit]="20"-->
+<!--                                    [rows]="rows"-->
+<!--                                    [rowHeight]="$any('auto')"-->
+<!--                                    [scrollbarH]="false"-->
+<!--                                    [externalSorting]="true"-->
+<!--                                    class="material"-->
+<!--                            >-->
+<!--                                <ngx-datatable-column-->
+<!--                                        [sortable]="false"-->
+<!--                                        cellClass="table-cell-style"-->
+<!--                                        headerClass="table-header-style"-->
+<!--                                        name="CLUSTER NAME"-->
+<!--                                        prop="cluster_name"-->
+<!--                                >-->
+<!--                                    <ng-template-->
+<!--                                        let-row="row"-->
+<!--                                        let-value="value"-->
+<!--                                        ngx-datatable-cell-template-->
+<!--                                    >-->
+<!--                                        {{ value }}-->
+<!--                                    </ng-template>-->
+<!--                                </ngx-datatable-column>-->
+
+<!--                                <ngx-datatable-column-->
+<!--                                        cellClass="pl-4 table-cell-style"-->
+<!--                                        headerClass="table-header-style"-->
+<!--                                        name="STACK STATUS"-->
+<!--                                        prop="stack_status"-->
+<!--                                >-->
+<!--                                    <ng-template let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>-->
+<!--                                        <div *ngIf="load[rowIndex].loading" class="d-flex">-->
+<!--                                            <div class="spinner-border" role="status">-->
+<!--                                                <span class="sr-only" ></span>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div *ngIf="load[rowIndex].loading== false" >-->
+<!--                                            <span *ngIf="value=='Prometheus Url'" class="badge completed w-auto" (click)="goToPrometheusStack(rowIndex)">{{value}}</span>-->
+<!--                                            <span *ngIf="value=='Deployment Failed'" class="badge failed w-auto" >{{value}}</span>-->
+<!--                                        </div>-->
+<!--                                    </ng-template>-->
+<!--                                </ngx-datatable-column>-->
+
+<!--                                <ngx-datatable-column-->
+<!--                                        cellClass="pl-4 table-cell-style"-->
+<!--                                        headerClass="table-header-style"-->
+<!--                                        name="API SERVER DASHBOARD"-->
+<!--                                        prop="apiserver_dashboard_status"-->
+<!--                                >-->
+<!--                                    <ng-template let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>-->
+<!--                                        <div *ngIf="load[rowIndex].loading" class="d-flex">-->
+<!--                                            <div class="spinner-border" role="status">-->
+<!--                                                <span class="sr-only" ></span>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div *ngIf="load[rowIndex].loading== false" >-->
+<!--                                            <span *ngIf="value=='Dashboard Url'" class="badge completed w-auto" (click)="goToApiServerDashboard(rowIndex)">{{value}}</span>-->
+<!--                                            <span *ngIf="value=='Deployment Failed'" class="badge failed w-auto" >{{value}}</span>-->
+<!--                                        </div>-->
+
+<!--                                    </ng-template>-->
+<!--                                </ngx-datatable-column>-->
+<!--                                <ngx-datatable-column-->
+<!--                                        cellClass="pl-4 table-cell-style"-->
+<!--                                        headerClass="table-header-style"-->
+<!--                                        name="CONTAINER DASHBOARD"-->
+<!--                                        prop="container_dashboard_status"-->
+<!--                                >-->
+<!--                                    <ng-template let-value="value" let-rowIndex="rowIndex" ngx-datatable-cell-template>-->
+<!--                                        <div *ngIf="load[rowIndex].loading" class="d-flex">-->
+<!--                                            <div class="spinner-border" role="status">-->
+<!--                                                <span class="sr-only" ></span>-->
+<!--                                            </div>-->
+<!--                                        </div>-->
+<!--                                        <div *ngIf="load[rowIndex].loading== false" >-->
+<!--                                            <span *ngIf="value=='Dashboard Url'" class="badge completed w-auto" (click)="goToContainerDashboard(rowIndex)">{{value}}</span>-->
+<!--                                            <span *ngIf="value=='Deployment Failed'" class="badge failed w-auto" >{{value}}</span>-->
+<!--                                        </div>-->
+
+<!--                                    </ng-template>-->
+<!--                                </ngx-datatable-column>-->
+<!--                            </ngx-datatable>-->
+<!--                        </div>-->
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+

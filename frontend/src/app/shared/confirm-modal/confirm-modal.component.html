@@ -1,0 +1,14 @@
+<div class="confirm modal-body bg-gradient-dark rounded">
+    <div class="content text-center text-white mt-4 mb-3" [innerHTML]="title"></div>
+    <div class="justify-content-center d-flex" *ngIf="remark">
+        
+            <textarea name="remark" class="w-80 bg-gradient-dark text-white" placeholder="Remarks"
+                 #dialog></textarea>
+            
+    </div>
+    <div class="buttons d-flex justify-content-center mt-4 mb-3">
+        <button type="button" class="btn btn-primary m-2" (click)="confirm()" [innerHTML]="confirmLabel"></button>
+        <button type="button" *ngIf="declineLabel" class="btn btn-secondary m-2" (click)="decline()"
+            [innerHTML]="declineLabel"></button>
+    </div>
+</div>

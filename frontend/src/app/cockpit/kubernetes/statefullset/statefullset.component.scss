@@ -1,0 +1,94 @@
+@media only screen and (max-width:576px) {
+  .page-wrapper {
+    height: 80px;
+    margin-bottom: 1rem;
+  }
+
+  .nav-item {
+    margin-bottom: 2px;
+  }
+}
+
+.page-wrapper{
+  margin-top: 25px;
+}
+
+li {
+  border-radius: 5px;
+}
+
+.tabs {
+  cursor: pointer;
+  border-radius: 5px;
+  padding: 9px 10px;
+}
+
+.filterDiv {
+  margin: 2px;
+}
+
+.nav-right {
+  width: 250px;
+}
+
+select {
+  background: url(../../../../assets/icon/menu-buttons/dropdownArrow.png) no-repeat
+  right/16px;
+  background-position: right 14px top 25px;
+  padding: 10px;
+  width: 100%;
+  vertical-align: middle;
+  background-color: #202940;
+  color: white;
+  height: 55px;
+  border: 1px solid grey;
+}
+
+select:-webkit-autofill select:-webkit-autofill:hover,
+select:-webkit-autofill:focus {
+  -webkit-text-fill-color: white;
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+select:focus {
+  background-color: #202940;
+  color: white;
+}
+
+@media only screen and (max-width: 489px) {
+  .addBtn {
+    display: grid;
+    justify-content: center;
+  }
+  .addContribution {
+    padding: 6px 20px;
+  }
+}
+
+.menuIcon {
+  color: #6c7293;
+}
+
+.material-icons:hover{
+  cursor: pointer;
+}
+
+.reset{
+  height: 55px;
+  margin-top: 2rem;
+  width: 100%;
+}
+
+button{
+  height: 55px;
+  width: 100%;
+}
+
+.namespace{
+  height: 55px;
+  border: 1px solid grey;
+}
+pre{
+  color: wheat;
+  font-size: 1em;
+}

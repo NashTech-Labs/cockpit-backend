@@ -1,0 +1,53 @@
+@media only screen and (max-width: 720px) {
+  .table-block {
+    .table-block-content {
+      ngx-datatable-column {
+        padding: 0.625rem;
+        font-size: 0.625rem;
+      }
+
+      ngx-datatable-row-detail {
+        padding: 0.625rem;
+        font-size: 0.625rem;
+      }
+    }
+  }
+}
+
+::ng-deep .datatable-body-row {
+  height: 53px !important;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.4) !important;
+  align-items: center;
+  border-right: 0 !important;
+  border-left: 0 !important;
+}
+
+::ng-deep ngx-datatable .datatable-footer .datatable-pager .pager li {
+  padding: 2px !important;
+}
+
+
+::ng-deep ngx-datatable .datatable-footer .datatable-pager .pager li.active {
+  background-color: #1673e0;
+}
+
+::ng-deep .datatable-body-cell-label{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap ;
+  margin-top: 5%;
+}
+.summaryData{
+  background-color: white;
+  color: black;
+  border-radius: 5px;
+}
+button{
+  width: fit-content;
+}
+
+pre{
+  white-space: pre-wrap;
+}
+
+

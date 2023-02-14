@@ -1,0 +1,94 @@
+<div *ngIf="loading == false" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+        <span class="sr-only" id="loading"></span>
+    </div>
+</div>
+<form [formGroup]="createForm" class="mt-4">
+    <div class="col form-group mb-4 mx-2">
+        <label class="mb-2">Cluster Name</label>
+        <select class="form-control border border-secondary p-2 text-white"
+                formControlName="cluster_name" [(ngModel)]="preSelectedCluster" (change)="selectCluster($event)">
+            <option value="Cluster" disabled selected>Select Cluster</option>
+            <option *ngFor="let cluster of clusters" [value]="cluster.cluster_name"
+                    [selected]="cluster.cluster_name == preSelectedCluster">{{cluster.cluster_name}}
+            </option>
+        </select>
+        <label class="mt-3 mb-2">Namespaces</label>
+        <select class="form-control border border-secondary p-2 text-white"
+                formControlName="namespace" [(ngModel)]="preSelectedNamespace" (change)="selectNamespace($event)">
+            <option value="Namespace" disabled selected>Select Namespace</option>
+            <option *ngFor="let namespace of namespaces" [value]="namespace.namespace"
+                    [selected]="namespace.namespace == preSelectedNamespace">{{namespace.namespace}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-pod'">Pod Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-pod'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Pod</option>
+            <option *ngFor="let pod of podList">{{pod.pod}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-deployment'">Deployment Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-deployment'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Deployment</option>
+            <option *ngFor="let pod of podList">{{pod.deployment}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-daemonset'">Daemonset Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-daemonset'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Daemonset</option>
+            <option *ngFor="let pod of podList">{{pod.daemonset}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-secret'">Secret Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-secret'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Secret</option>
+            <option *ngFor="let pod of podList">{{pod.secret}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-statefulset'">Statefulset Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-statefulset'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Statefulset</option>
+            <option *ngFor="let pod of podList">{{pod.statefullset}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-cronjob'">Cronjob Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-cronjob'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Cronjob</option>
+            <option *ngFor="let pod of podList">{{pod.cronjob}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-job'">Job Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-job'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Job</option>
+            <option *ngFor="let pod of podList">{{pod.job}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-configmap'">Configmap Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-configmap'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Configmap</option>
+            <option *ngFor="let pod of podList">{{pod.configmap}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-service'">Service Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-service'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Service</option>
+            <option *ngFor="let pod of podList">{{pod.service}}
+        </select>
+
+        <label class="mt-3 mb-2 input-label" *ngIf="getAction=='get-ingress'">Ingress Name</label>
+        <select class="form-control border border-secondary p-2 text-white" *ngIf="getAction=='get-ingress'"
+                formControlName="k8s_object_name" (change)="selectPodName($event)">
+            <option value="Pod" selected>Select Ingress</option>
+            <option *ngFor="let pod of podList">{{pod.ingress}}
+        </select>
+    </div>
+</form>

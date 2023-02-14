@@ -1,0 +1,39 @@
+<div *ngIf="loading == false" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+        <span class="sr-only" id="loading"></span>
+    </div>
+</div>
+<form [formGroup]="createForm" class="mt-4">
+    <div class="col form-group mb-4 mx-2">
+        <label class="mb-2">Cluster Name</label>
+        <select class="form-control border border-secondary p-2 text-white"
+                formControlName="cluster_name" [(ngModel)]="preSelectedCluster" (change)="selectCluster($event)">
+            <option value="Cluster" disabled selected>Select Cluster</option>
+            <option *ngFor="let cluster of clusters" [value]="cluster.cluster_name"
+                    [selected]="cluster.cluster_name == preSelectedCluster">{{cluster.cluster_name}}
+            </option>
+        </select>
+        <label class="mt-3 mb-2">Namespaces</label>
+        <select class="form-control border border-secondary p-2 text-white"
+                formControlName="namespace" [(ngModel)]="preSelectedNamespace" (change)="selectNamespace($event)">
+            <option value="Namespace" disabled selected>Select Namespace</option>
+            <option *ngFor="let namespace of namespaces" [value]="namespace.namespace"
+            [selected]="namespace.namespace == preSelectedNamespace">{{namespace.namespace}}
+        </select>
+        <label class="mt-3 mb-2 input-label">Manifest</label>
+        <input
+                type="file"
+                formControlName="manifest"
+                class="form-control border border-secondary p-2 text-white"
+                placeholder=""
+                (change)="onFileSelected($event)"
+        />
+        <label class="mt-3 mb-2 input-label">{{title}} Name</label>
+        <input
+                type="text"
+                formControlName="k8s_object_name"
+                class="form-control border border-secondary p-2 text-white"
+                placeholder=""
+        />
+    </div>
+</form>

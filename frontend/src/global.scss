@@ -1,0 +1,59 @@
+@import "~@swimlane/ngx-datatable/assets/icons.css";
+
+.modal-dialog, .modal-content{
+    position: absolute;
+    top:35%;
+}
+
+
+@media screen and (max-width:600px){
+    .modal-content{
+        max-width:75%;
+        margin: auto;
+    }
+    
+}
+.tox-menu-nav__js {
+    .tox-collection__item-label {
+      h1,
+      h2,
+      h3,
+      h4,
+      h5,
+      h6 {
+        color: black !important;
+      }
+    }
+  }
+
+  .tox .tox-label, .tox .tox-toolbar-label{
+    color: black !important;
+  }
+  .tox .tox-notification--warn, .tox .tox-notification--warning {
+    display: none !important;
+  }
+
+.head{
+  width: fit-content;
+}
+
+#loading{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}

@@ -1,0 +1,96 @@
+<div *ngIf="loading == false" class="d-flex justify-content-center">
+    <div class="spinner-border" role="status">
+        <span class="sr-only" id="loading"></span>
+    </div>
+</div>
+<div class="row my-5">
+    <div class="col-12">
+        <div class="card p-4">
+            <div class="card-header p-0 position-relative mt-n5 mb-4 head">
+                <div
+                        class="bg-gradient-primary shadow-primary border-radius-lg pt-4 pb-3 px-4 table_header_section"
+                >
+                    <h6 class="text-white text-capitalize ">
+                        Overview
+                    </h6>
+                </div>
+            </div>
+            <div class="table-block">
+                <div class="table-block-content">
+                    <div class="table-responsive">
+                        <div class="d-none d-sm-block">
+                            <ngx-datatable
+                                    [columnMode]="'force'"
+                                    [footerHeight]="50"
+                                    [headerHeight]="$any('auto')"
+                                    [limit]="10"
+                                    [rows]="tableRows"
+                                    [rowHeight]="$any('auto')"
+                                    [scrollbarH]="false"
+                                    [externalSorting]="true"
+                                    [offset]="tableOffset"
+                                    (page)="onChange($event)"
+                                    class="material"
+                            >
+                                <ngx-datatable-column
+                                        [sortable]="false"
+                                        cellClass="table-cell-style"
+                                        headerClass="table-header-style"
+                                        name="NAME"
+                                        prop="deployment"
+                                >
+                                    <ng-template
+                                        let-row="row"
+                                        let-value="value"
+                                        ngx-datatable-cell-template
+                                    >
+                                        {{ value }}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column
+                                        cellClass="pl-4 table-cell-style"
+                                        headerClass="table-header-style"
+                                        name="DEPLOYMENT"
+                                        prop="deployment"
+                                >
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        {{ value }}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                                <ngx-datatable-column
+                                        cellClass="pl-4 table-cell-style"
+                                        headerClass="table-header-style"
+                                        name="NAMESPACE"
+                                        prop="namespace"
+                                >
+                                    <ng-template let-value="value" ngx-datatable-cell-template>
+                                        {{ value }}
+                                    </ng-template>
+                                </ngx-datatable-column>
+
+                            </ngx-datatable>
+                        </div>
+
+                        <div *ngFor="let row of tableRows"
+                             class="mobile-table-row d-block d-sm-none col-xl-3 col-sm-6 mb-xl-0 mb-4">
+                            <div class="col-12 text-white font-weight-bolder pb-1 px-0 mb-1 row-title border-bottom border-secondary">
+                                {{ row.deployment }}
+                            </div>
+                            <div class="mr-auto d-flex flex-column">
+                                <span class="text-white heading">DEPLOYMENT</span>
+                                <span class="score-details">{{ row.deployment }}</span>
+                            </div>
+                            <div class="mr-auto d-flex flex-column">
+                                <span class="text-white heading">NAMESPACE</span>
+                                <span class="score-details">{{ row.namespace }} </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

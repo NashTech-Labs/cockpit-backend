@@ -1,0 +1,46 @@
+<form [formGroup]="createForm" class="mt-4">
+  <div class="col form-group mb-4 mx-2">
+    <label class="mb-2 input-label">Cluster Name</label>
+    <input
+      type="text"
+      formControlName="cluster_name"
+      class="form-control border border-secondary p-2 text-white"
+      placeholder="" required
+    />
+    <label class="mt-3 mb-2 input-label">Version</label>
+    <input
+      type="text"
+      formControlName="version"
+      class="form-control border border-secondary p-2 text-white"
+      placeholder=""
+    />
+    <label class="mt-3 mb-2 input-label">AppServer Endpoint</label>
+    <input
+      type="text"
+      formControlName="api_server_endpoint"
+      class="form-control border border-secondary p-2 text-white"
+      placeholder=""
+    />
+    <label class="mt-3 mb-2 input-label">Bearer Token</label>
+    <input
+      type="text"
+      formControlName="bearer_token"
+      class="form-control border border-secondary p-2 text-white"
+      placeholder=""
+    />
+    <label class="mt-3 mb-2 input-label">Kube Config</label>
+    <input
+      type="text"
+      formControlName="kubeconfig"
+      class="form-control border border-secondary p-2 text-white"
+      placeholder=""
+    />
+    <label class="mt-3 mb-2 input-label">Cloud</label>
+    <input
+      type="text"
+      formControlName="cloud"
+      class="form-control border border-secondary p-2 text-white"
+      placeholder=""
+    />
+  </div>
+</form>
